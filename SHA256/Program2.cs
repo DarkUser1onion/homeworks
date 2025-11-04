@@ -59,13 +59,18 @@ internal class Program
         
         passwordSHA = SHA256encoder(pass);
 
+        
+        Int64 counter = 1;
+        DateTime start = DateTime.Now;
         foreach (string s in listPass)
         {
-            Console.WriteLine($"Пробую \"{s}\" пароль");
+            Console.WriteLine($"Пробую {counter++} \"{s}\" пароль");
             if(SHA256encoder(s) == passwordSHA)
             {
                 tempSHA = SHA256encoder(s);
                 Console.WriteLine($"\nНайдено совпадение! : {tempSHA} --- {s}");
+                DateTime end = DateTime.Now;
+                Console.WriteLine(end - start);
                 return;
             }
         }
