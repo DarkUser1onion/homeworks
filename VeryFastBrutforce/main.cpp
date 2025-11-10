@@ -5,30 +5,28 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <fstream>
  
 int main()
 {
-	std::vector<char*> passwords;
+	std::vector<std::string> passwords;
 
-	std::cout << "Parsing rockyou.txt...";
+	std::cout << "Parsing rockyou.txt...\n";
 
-	int fd = open("rockyou.txt", O_RDONLY);
-	if(fd == -1)
+	std::ifstream file("rockyou.txt");
+
+	if(!file.is_open())
 	{
 		std::cout << "Неверно указан файл rockyou.txt или его не существует";
 		return 255;
 	}
 
-	std::vector<char> buffer(1024);
-	std::vector<char*> temp;
-
-	size_t dump;
-
-	while((dump = read(fd, buffer.data(), buffer.size())) > 0)
+	
+	std::string dump;
+	while(std::getline(file, dump))
 	{
-		passwords.push_back(buffer.data());
+		passwords.push_back(dump);
 	}
-
 
 	std::string userPass;
 	std::string userPassSha;
@@ -50,18 +48,18 @@ int main()
 		{
 			if(sha256(passwords[i]) == userPassSha)
 			{
-				std::cout << "Пароль найден! {" << passwords[i] << "}, его hash: {" << sha256(passwords[i]) << "}" << std::endl;
+				std::cout << "Pass not found! {" << passwords[i] << "}, hash: {" << sha256(passwords[i]) << "}" << std::endl;
 				flag = false;
 				pause();
 				break;
 			}
 			else
 			{
-				write(1, "Пробую пароль #", 15);
+				write(1, "Trying pass ", 12);
 				write(1, std::to_string(counter).c_str(), std::to_string(counter).size());
 				write(1, " {", 2);
-				write(1, passwords[i], strlen(passwords[i]));
-				write(1, " }\n", 4);
+				write(1, passwords[i].c_str(), passwords[i].size());
+				write(1, "}\n", 3);
 			}
 			
 			counter++;
