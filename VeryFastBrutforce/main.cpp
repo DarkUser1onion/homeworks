@@ -65,7 +65,7 @@ int main()
 			counter++;
 		}
 
-		if(flag)
+		if(!flag)
 		{
 			std::cout << "Pass not found!" << std::endl;
 			pause();
