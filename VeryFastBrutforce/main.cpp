@@ -17,7 +17,7 @@ int main()
 
 	if(!file.is_open())
 	{
-		std::cout << "Неверно указан файл rockyou.txt или его не существует";
+		std::cout << "Not correct file rockyou.txt or it doesn't exist";
 		return 255;
 	}
 
@@ -48,7 +48,7 @@ int main()
 		{
 			if(sha256(passwords[i]) == userPassSha)
 			{
-				std::cout << "Pass not found! {" << passwords[i] << "}, hash: {" << sha256(passwords[i]) << "}" << std::endl;
+				std::cout << "Pass found! {" << passwords[i] << "}, hash: {" << sha256(passwords[i]) << "}" << std::endl;
 				flag = false;
 				pause();
 				break;
@@ -67,7 +67,7 @@ int main()
 
 		if(flag)
 		{
-			std::cout << "Пароль не найден!" << std::endl;
+			std::cout << "Pass not found!" << std::endl;
 			pause();
 		}
 	}
