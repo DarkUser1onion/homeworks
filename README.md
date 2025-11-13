@@ -1,6 +1,6 @@
 <h1 align="center">Добро пожаловать</h1>
 <!--Другие работы-->
-![Мои другие работы](https://github.com/DarkUser1onion/transport-rental-db)
+![Static Badge](https://avatars.githubusercontent.com/u/78517132?v=4&size=64)
 
 # Если файл пустой, то он еще не готов. Значит скоро будет сделан!
 
