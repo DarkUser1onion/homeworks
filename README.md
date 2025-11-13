@@ -1,4 +1,4 @@
-Добро пожаловать
+<h1 align="center">Добро пожаловать</h1>
 <!--Другие работы-->
 ![Мои другие работы](https://github.com/DarkUser1onion/transport-rental-db)
 
