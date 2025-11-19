@@ -20,3 +20,4 @@
 |12| ```GeneticAlgorithm```	   | Готов                                               |
 |13| ```CRC```	   | Не готов                                               |
 |14| ```EllipticalCurves```	   | Не готов                                               |
+|15| ```ForkAndPipe```	   | Не готов. Бомбануло с fork() и signal(). Будет доделан чуть позже.                                               |
