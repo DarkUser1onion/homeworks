@@ -18,6 +18,5 @@
 |10| ```VeryFastBrutforce```	   | Готов      |
 |11| ```SHA256```	   | Готов                                               |
 |12| ```GeneticAlgorithm```	   | Готов                                               |
-|13| ```CRC```	   | Не готов                                               |
-|14| ```EllipticalCurves```	   | Готов?                                               |
-|15| ```ForkAndPipe```	   | Не готов. Бомбануло с fork() и signal(). Будет доделан чуть позже.                                               |
+|13| ```EllipticalCurves```	   | Готов?                                               |
+|14| ```ForkAndPipe```	   | Не готов. Бомбануло с fork() и signal(). Будет доделан чуть позже.                                               |
