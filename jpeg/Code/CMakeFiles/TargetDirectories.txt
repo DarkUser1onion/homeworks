@@ -1,0 +1,7 @@
+/home/user/Desktop/jpeg-compressor/CMakeFiles/jpge.dir
+/home/user/Desktop/jpeg-compressor/CMakeFiles/edit_cache.dir
+/home/user/Desktop/jpeg-compressor/CMakeFiles/rebuild_cache.dir
+/home/user/Desktop/jpeg-compressor/CMakeFiles/list_install_components.dir
+/home/user/Desktop/jpeg-compressor/CMakeFiles/install.dir
+/home/user/Desktop/jpeg-compressor/CMakeFiles/install/local.dir
+/home/user/Desktop/jpeg-compressor/CMakeFiles/install/strip.dir
