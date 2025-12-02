@@ -16,7 +16,6 @@ void exiter(int sig)
     {
         kill(pid, 15);
         std::this_thread::sleep_for(std::chrono::seconds(2));
-
         if(waitpid(pid, nullptr, WNOHANG) == 0)
         {
             kill(pid, 9);
@@ -29,19 +28,55 @@ void exiter(int sig)
     << sig
     << "}, он был уничтожен!"
     << std::endl;
+}
 
-    pid = -1;
+void processKiller(int sig)
+{
+    std::cout << "Убиваем все процессы {" << sig << "}!" << std::endl;
+    kill(pid, 9);
+    waitpid(pid, nullptr, WNOHANG);
+}
+
+void closeProgram()
+{
+    std::cout << "Usage: daemon -p {Path} -t {time}" << std::endl;
+    exit(1);
 }
 
 int main(int argc, char** argv)
 {
-    std::filesystem::path pt = "/tmp/pipe";
+    std::filesystem::path pt;
+    std::string timer;
+
+    if(argc < 5)
+    {
+        closeProgram();
+    }
+
+    int opt;
+    char* opts = "p:t:";
+
+    while((opt = getopt(argc, argv, opts)) != -1)
+    {
+        switch(opt)
+        {
+            case 'p':
+                pt = optarg;
+                break;
+            case 't':
+                timer = optarg;
+                break;
+            default:
+                closeProgram();
+        }
+    }
     
     if(!std::filesystem::exists(pt))
     {
         mkfifo(pt.c_str(), 0644);
     }
     
+    signal(2, processKiller);
     while(true)
     {
         pid = fork();
@@ -53,11 +88,10 @@ int main(int argc, char** argv)
         else if(pid == 0)
         {
             std::cout << "Запуск дочернего процесса!" << std::endl;
-            execlp("./process", "process", nullptr);
+            execlp("./process", "process", pt.c_str(), timer.c_str(), NULL);
         }
         else
         {
-        
             int fd = open(pt.c_str(), O_RDONLY);
         
             signal(15, exiter);
@@ -81,12 +115,13 @@ int main(int argc, char** argv)
                     if(waitpid(pid, nullptr, WNOHANG) == 0)
                     {
                         std::cout << "\nAnti-forkbomb вырубает родительский процесс!" << std::endl;
-                        exit(1);
+                        processKiller(9);
                     }
                     break;
                 }
             }
 
         }
+        std::cout << "\nОбнаруженно падение процесса! Перезапускаем его!" << std::endl;
     }
 }
