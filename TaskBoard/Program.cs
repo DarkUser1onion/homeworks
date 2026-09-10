@@ -40,6 +40,21 @@ app.Use(async (context, next) =>
     await next(context);
 });
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/tasks/api"))
+    {
+        if (!context.Request.Headers.TryGetValue("X-Api-Key", out var apiKey)
+            || apiKey != "secret123")
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("Unauthorized: invalid or missing X-Api-Key");
+            return;
+        }
+    }
+    await next(context);
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
