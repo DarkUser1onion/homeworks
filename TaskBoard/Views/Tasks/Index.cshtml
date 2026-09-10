@@ -1,17 +1,29 @@
 @model List<TaskBoard.Services.TaskItem>
 @{
     ViewData["Title"] = "Список задач";
+    var status = (string)(ViewBag.Status ?? "all");
 }
 
 <h1>Задачи</h1>
 
 <p><strong>Всего задач: @ViewBag.Total, выполнено: @ViewBag.Done</strong></p>
 
-<a href="/tasks/create" class="btn btn-primary">Новая задача</a>
+<div class="mb-3">
+    <div class="btn-group" role="group">
+        <a href="/tasks?status=all"
+           class="btn btn-sm @(status == "all" ? "btn-primary" : "btn-outline-primary")">Все</a>
+        <a href="/tasks?status=active"
+           class="btn btn-sm @(status == "active" ? "btn-primary" : "btn-outline-primary")">В работе</a>
+        <a href="/tasks?status=done"
+           class="btn btn-sm @(status == "done" ? "btn-primary" : "btn-outline-primary")">Готово</a>
+    </div>
+</div>
+
+<a href="/tasks/create?status=@status" class="btn btn-primary">Новая задача</a>
 
 @if (!Model.Any())
 {
-    <p>Пока нет задач. Создайте первую!</p>
+    <p class="mt-3">Пока нет задач по выбранному фильтру.</p>
 }
 else
 {
@@ -31,7 +43,7 @@ else
                 <tr>
                     <td>@task.Id</td>
                     <td>
-                        <a href="/tasks/details/@task.Id">@task.Title</a>
+                        <a href="/tasks/details/@task.Id?status=@status">@task.Title</a>
                     </td>
                     <td>
                         @if (task.IsDone)
@@ -48,11 +60,13 @@ else
                         @if (!task.IsDone)
                         {
                             <form method="post" action="/tasks/done/@task.Id" class="d-inline">
+                                <input type="hidden" name="status" value="@status" />
                                 <button type="submit" class="btn btn-sm btn-outline-success">✓</button>
                             </form>
                         }
                         <form method="post" action="/tasks/delete/@task.Id" class="d-inline"
                               onsubmit="return confirm('Удалить?')">
+                            <input type="hidden" name="status" value="@status" />
                             <button type="submit" class="btn btn-sm btn-outline-danger">✕</button>
                         </form>
                     </td>

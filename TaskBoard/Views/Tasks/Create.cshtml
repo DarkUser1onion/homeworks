@@ -1,10 +1,13 @@
 @{
     ViewData["Title"] = "Новая задача";
+    var status = (string)(ViewBag.Status ?? "all");
 }
 
 <h1>Новая задача</h1>
 
 <form method="post" action="/tasks/create">
+    <input type="hidden" name="status" value="@status" />
+
     <div class="mb-3">
         <label class="form-label">Заголовок</label>
         <input type="text" name="title" class="form-control" />
@@ -20,5 +23,5 @@
         <textarea name="description" class="form-control" rows="3"></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Создать</button>
-    <a href="/tasks" class="btn btn-secondary">Отмена</a>
+    <a href="/tasks?status=@status" class="btn btn-secondary">Отмена</a>
 </form>
