@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Новая задача";
+}
+
+<h1>Новая задача</h1>
+
+<form method="post" action="/tasks/create">
+    <div class="mb-3">
+        <label class="form-label">Заголовок</label>
+        <input type="text" name="title" class="form-control" />
+        @if (ViewData.ModelState["title"]?.Errors.Count > 0)
+        {
+            <div class="text-danger">
+                @ViewData.ModelState["title"].Errors[0].ErrorMessage
+            </div>
+        }
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Описание</label>
+        <textarea name="description" class="form-control" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Создать</button>
+    <a href="/tasks" class="btn btn-secondary">Отмена</a>
+</form>
