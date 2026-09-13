@@ -1,0 +1,29 @@
+@model IEnumerable<DashboardAdmin.ViewComponents.TrendSummaryItem>
+@using DashboardAdmin.Models
+<div class="card">
+    <h4>Сводка по трендам</h4>
+    @if (Model == null || !Model.Any())
+    {
+        <p>Нет данных</p>
+    }
+    else
+    {
+        <ul style="list-style:none; padding:0; margin:0;">
+            @foreach (var item in Model)
+            {
+                <li style="margin-bottom:10px;">
+                    <strong>
+                        @(item.Trend switch {
+                            Trend.Up => "Рост",
+                            Trend.Down => "Снижение",
+                            Trend.Stable => "Стабильно",
+                            _ => "—"
+                        })
+                    </strong><br />
+                    Карточек: @item.Count<br />
+                    Сумма: @item.Sum
+                </li>
+            }
+        </ul>
+    }
+</div>

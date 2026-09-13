@@ -1,0 +1,21 @@
+@model DashboardAdmin.Models.DashboardCard
+@using DashboardAdmin.Models
+@functions {
+    string GetTrendLabel(Trend t) => t switch
+    {
+        Trend.Up => "Рост",
+        Trend.Down => "Снижение",
+        Trend.Stable => "Стабильно",
+        _ => "—"
+    };
+}
+<div class="card">
+    <h4>@Model.Title</h4>
+    <div class="value">@Model.Value @Model.Unit</div>
+    <div>Тренд: @GetTrendLabel(Model.Trend)</div>
+    @if (Model.Value < 0)
+    {
+        <span class="badge negative">Отрицательное значение</span>
+    }
+    <p>@Model.Description</p>
+</div>

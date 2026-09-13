@@ -1,0 +1,27 @@
+@{
+    Layout = "_Layout";
+}
+
+@* Проброс секции из дочерней вьюхи в родительский _Layout *@
+@section PageHeader {
+    @if (IsSectionDefined("PageHeader"))
+    {
+        @await RenderSectionAsync("PageHeader", required: false)
+    }
+}
+
+@section Scripts {
+    @if (IsSectionDefined("Scripts"))
+    {
+        @await RenderSectionAsync("Scripts", required: false)
+    }
+}
+
+<div style="display:flex; gap:20px;">
+    <div style="flex: 1 1 auto;">
+        @RenderBody()
+    </div>
+    <aside style="flex: 0 0 280px;">
+        @await Component.InvokeAsync("TrendSummary")
+    </aside>
+</div>
