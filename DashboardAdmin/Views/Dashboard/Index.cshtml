@@ -3,7 +3,10 @@
 <!-- Админ-дашборд -->
 @{
     ViewData["Title"] = "Дашборд";
-    Layout = "_AppLayout";
+    if (ViewData["Mode"] as string != "Print")
+    {
+        Layout = "_AppLayout";
+    }
     int i = 0;
     decimal totalValue = Model.Sum(c => c.Value);
     int cardCount = Model.Count();
@@ -26,6 +29,10 @@
             @ViewData["ReportPeriod"] — @cardCount показателей, сумма: @totalValue @ViewBag.Currency
         </div>
     </div>
+}
+
+@section Actions {
+    <a href="/Dashboard/Print">Печать</a>
 }
 
 <div class="cards-grid">

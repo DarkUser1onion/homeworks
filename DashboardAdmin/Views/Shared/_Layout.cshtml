@@ -27,25 +27,32 @@
         .trend-stable { color: #666; }
         .cards-grid { display: flex; flex-wrap: wrap; }
         .cards-grid .card { flex: 1 1 30%; min-width: 260px; }
-        .actions { margin-top: 12px; }
+        .actions { margin: 12px 0 20px; }
         .actions a { display: inline-block; padding: 8px 16px; background: #2c3e50; color: #fff; text-decoration: none; border-radius: 4px; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">Админ-панель</div>
-        <nav>
-            <a href="/Dashboard">Дашборд</a>
-            <a href="/Settings">Настройки</a>
-        </nav>
-    </header>
+    @{
+        var isPrint = (ViewData["Mode"] as string) == "Print";
+    }
+
+    @if (!isPrint)
+    {
+        <header>
+            <div class="logo">Админ-панель</div>
+            <nav>
+                <a href="/Dashboard">Дашборд</a>
+                <a href="/Settings">Настройки</a>
+            </nav>
+        </header>
+    }
 
     <main>
         @if (IsSectionDefined("PageHeader"))
         {
             @await RenderSectionAsync("PageHeader", required: false)
         }
-        else
+        else if (!isPrint)
         {
             <div class="page-header"><h1>Панель управления</h1></div>
         }
@@ -53,9 +60,12 @@
         @RenderBody()
     </main>
 
-    <footer>
-        © @DateTime.Now.Year Админ-панель
-    </footer>
+    @if (!isPrint)
+    {
+        <footer>
+            © @DateTime.Now.Year Админ-панель
+        </footer>
+    }
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

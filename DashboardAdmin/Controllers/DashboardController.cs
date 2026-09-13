@@ -13,6 +13,16 @@ public class DashboardController : Controller
     {
         ViewData["ReportPeriod"] = "Сентябрь 2026";
         ViewBag.Currency = "RUB";
+        
         return View(_repository.GetAllCards());
+    }
+
+    public IActionResult Print()
+    {
+        ViewData["Mode"] = "Print";
+        ViewData["ReportPeriod"] = "Сентябрь 2026";
+        ViewBag.Currency = "RUB";
+        
+        return View("Index", _repository.GetAllCards());
     }
 }

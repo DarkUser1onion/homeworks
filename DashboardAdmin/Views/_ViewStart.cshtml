@@ -1,3 +1,8 @@
 ﻿@{
-    Layout = "_Layout";
+    var mode = ViewData["Mode"] as string;
+    if (mode == "Print")
+    {
+        Layout = "_PrintLayout";
+    }
+    // иначе - ничего, Layout установится в самой вьюхе или останется _Layout. Мб так норм будет
 }

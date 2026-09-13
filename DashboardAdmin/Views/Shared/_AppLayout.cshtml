@@ -2,7 +2,6 @@
     Layout = "_Layout";
 }
 
-@* Проброс секции из дочерней вьюхи в родительский _Layout *@
 @section PageHeader {
     @if (IsSectionDefined("PageHeader"))
     {
@@ -10,11 +9,12 @@
     }
 }
 
-@section Scripts {
-    @if (IsSectionDefined("Scripts"))
-    {
-        @await RenderSectionAsync("Scripts", required: false)
-    }
+@* Кнопка «Печать» рендерится прямо здесь *@
+@if (IsSectionDefined("Actions"))
+{
+    <div class="actions">
+        @await RenderSectionAsync("Actions", required: false)
+    </div>
 }
 
 <div style="display:flex; gap:20px;">
