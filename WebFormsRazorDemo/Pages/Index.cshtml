@@ -1,0 +1,52 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Демо Web Forms → Razor";
+}
+
+<h1>Знакомство с Razor Pages</h1>
+
+<form method="post">
+    <p>
+        <input asp-for="TxtName" placeholder="Ваше имя" class="form-control" />
+    </p>
+    <p>
+        <button type="submit" asp-page-handler="Hello" class="btn btn-primary">
+            Поздороваться
+        </button>
+        <button type="submit" asp-page-handler="Clear" class="btn btn-secondary">
+            Очистить
+        </button>
+    </p>
+</form>
+
+<hr />
+<p>
+    <a asp-page="/Calculator" class="btn btn-success">
+        Открыть калькулятор
+    </a>
+</p>
+
+@if (!string.IsNullOrEmpty(Model.LblResult))
+{
+    <div class="alert alert-success">@Model.LblResult</div>
+}
+
+<hr />
+<h3>Лог жизненного цикла страницы</h3>
+<div class="border p-2 bg-light">
+    @Html.Raw(Model.LitLog)
+</div>
+
+<h3>Скрытое поле (аналог __VIEWSTATE)</h3>
+<pre>@Model.ViewStateDump</pre>
+
+
+<table class="table table-striped">
+    <thead><tr><th>#</th><th>Имя</th><th>Город</th></tr></thead>
+    <tbody>
+        <tr><td>1</td><td>Иван</td><td>Москва</td></tr>
+        <tr><td>2</td><td>Пётр</td><td>СПб</td></tr>
+        <tr><td>3</td><td>Анна</td><td>Казань</td></tr>
+    </tbody>
+</table>

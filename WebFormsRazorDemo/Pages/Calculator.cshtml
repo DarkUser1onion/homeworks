@@ -1,0 +1,22 @@
+@page
+@model CalculatorModel
+@{ ViewData["Title"] = "Калькулятор"; }
+
+<h1>Мини-калькулятор</h1>
+
+<form method="post">
+    <input asp-for="A" type="number" step="any" class="form-control mb-2" />
+    <input asp-for="B" type="number" step="any" class="form-control mb-2" />
+    <select asp-for="Operation" class="form-select mb-2">
+        <option value="+">+</option>
+        <option value="-">−</option>
+        <option value="*">×</option>
+        <option value="/">÷</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Вычислить</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.Result))
+{
+    <div class="alert alert-info mt-3">@Model.Result</div>
+}
