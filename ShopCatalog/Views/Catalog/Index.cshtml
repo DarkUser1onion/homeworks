@@ -6,6 +6,28 @@
 <div class="container my-4">
     <h1 class="page-title">Каталог товаров</h1>
 
+    @{
+        var categories = ViewBag.Categories as List<string> ?? new List<string>();
+        var selected = ViewBag.SelectedCategory as string;
+    }
+
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="tagFilter">
+        <a asp-controller="Catalog" asp-action="Index"
+        class="btn btn-sm btn-outline-secondary rounded-pill @(string.IsNullOrEmpty(selected) ? "active" : "")"
+        data-tag="all">
+            Все
+        </a>
+
+        @foreach (var cat in categories)
+        {
+            <a asp-controller="Catalog" asp-action="Index" asp-route-category="@cat"
+            class="btn btn-sm btn-outline-secondary rounded-pill @(selected == cat ? "active" : "")"
+            data-tag="@cat">
+                @cat
+            </a>
+        }
+    </div>
+
     <div class="row g-4">
         @foreach (var product in Model)
         {

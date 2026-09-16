@@ -1,4 +1,13 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿(function () {
+    const filterBox = document.getElementById('tagFilter');
+    if (!filterBox) return;
 
-// Write your JavaScript code.
+    const pills = filterBox.querySelectorAll('[data-tag]');
+
+    pills.forEach(pill => {
+        pill.addEventListener('click', function () {
+            pills.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+})();

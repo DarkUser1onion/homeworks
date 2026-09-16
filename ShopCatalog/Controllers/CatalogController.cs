@@ -28,9 +28,22 @@ public class CatalogController : Controller
                 ImageUrl = "https://picsum.photos/seed/backpack/400/300" }
     };
 
-    public IActionResult Index()
+    public IActionResult Index(string? category)
     {
         ViewData["Title"] = "Каталог товаров";
-        return View(_products);
+
+        ViewBag.Categories = _products
+            .Select(p => p.Category)
+            .Distinct()
+            .OrderBy(c => c)
+            .ToList();
+
+        ViewBag.SelectedCategory = category;
+
+        var items = string.IsNullOrEmpty(category)
+            ? _products
+            : _products.Where(p => p.Category == category).ToList();
+
+        return View(items);
     }
 }
