@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "tH8bQ/m1TUc=",
+  "success": true,
+  "projectFilePath": "/home/Whoami/Desktop/homeworks/ShopCatalog/ShopCatalog.csproj",
+  "expectedPackageFiles": [
+    "/home/Whoami/.nuget/packages/buildbundlerminifier/3.2.449/buildbundlerminifier.3.2.449.nupkg.sha512"
+  ],
+  "logs": []
+}

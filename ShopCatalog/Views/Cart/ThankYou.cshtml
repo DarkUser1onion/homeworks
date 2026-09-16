@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Спасибо за заказ";
+}
+
+<div class="container my-5 text-center">
+    @if (TempData["OrderSuccess"] is string message)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Крутяк. @message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+        </div>
+    }
+
+    <h1 class="display-5 my-4">Спасибо за заказ!</h1>
+    <p class="lead text-muted">Мы свяжемся с вами для подтверждения.</p>
+
+    <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary mt-3">
+        Вернуться в каталог
+    </a>
+</div>
