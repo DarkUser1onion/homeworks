@@ -18,7 +18,7 @@ public class CatalogController : Controller
                 Price = 1490m, OldPrice = 2490m, IsHit = true, Category = "Одежда",
                 ImageUrl = "https://picsum.photos/seed/tshirt/400/300" },
         new() { Id = 4, Name = "Механическая клавиатура", Description = "Переключатели Cherry MX",
-                Price = 7490m, Category = "Электроника",
+                Price = 7490m, Category = "Электроника", Stock = 0,
                 ImageUrl = "https://picsum.photos/seed/keyboard/400/300" },
         new() { Id = 5, Name = "Кружка «Программист»", Description = "Керамика, 350 мл",
                 Price = 590m, IsHit = false, Category = "Дом",

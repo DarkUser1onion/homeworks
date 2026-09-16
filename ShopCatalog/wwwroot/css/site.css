@@ -38,3 +38,32 @@
 .btn-checkout:active {
     transform: scale(0.98);
 }
+
+.product-card.shadow-sm {
+    transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+.product-card.shadow-sm:hover {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+    transform: translateY(-2px);
+}
+
+.product-card.out-of-stock .card-img-top {
+    filter: grayscale(60%) opacity(0.7);
+}
+.product-card.out-of-stock {
+    cursor: not-allowed;
+}
+
+.product-card.border-success {
+    border-width: 2px;
+}
+
+.product-card.border-danger {
+    border-width: 2px;
+}
+
+.product-card .badge {
+    font-size: 0.85rem;
+    padding: 0.4em 0.7em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
