@@ -1,0 +1,61 @@
+@model ShopCatalog.Models.Product
+
+@{
+    var inStock = Model.Stock > 0;
+    var borderClass = !inStock
+        ? "border-danger"
+        : (Model.DiscountPercent > 30 ? "border-success" : "");
+
+    string badgeText = null;
+    string badgeCss = null;
+    if (!inStock) { badgeText = "Нет в наличии"; badgeCss = "bg-danger"; }
+    else if (Model.IsHit) { badgeText = "ХИТ"; badgeCss = "bg-success text-white"; }
+    else if (Model.DiscountPercent > 30) { badgeText = $"Большая скидка −{Model.DiscountPercent}%"; badgeCss = "bg-success"; }
+    else if (Model.DiscountPercent > 0) { badgeText = $"Скидка {Model.DiscountPercent}%"; badgeCss = "bg-warning text-dark"; }
+}
+
+<div class="col-12 col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm @borderClass product-card @(inStock ? "" : "out-of-stock")">
+        <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Name" />
+
+        @if (badgeText != null)
+        {
+            <span class="badge @badgeCss position-absolute top-0 end-0 m-2">@badgeText</span>
+        }
+
+        <div class="card-body d-flex flex-column">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text text-muted small">@Model.Description</p>
+
+            <div class="mt-auto">
+                <ul class="list-group list-group-flush flex-column flex-md-row text-center mb-2">
+                    @if (Model.OldPrice.HasValue)
+                    {
+                        <li class="list-group-item px-0">
+                            <small class="text-muted d-block">Обычная</small>
+                            <s class="text-muted">@Model.OldPrice.Value.ToString("N0") ₽</s>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <small class="text-muted d-block">Со скидкой</small>
+                            <span class="fw-bold text-danger fs-5">@Model.Price.ToString("N0") ₽</span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item px-0 flex-fill">
+                            <small class="text-muted d-block">Цена</small>
+                            <span class="fw-bold fs-5">@Model.Price.ToString("N0") ₽</span>
+                        </li>
+                    }
+                </ul>
+
+                <button type="button"
+                        class="btn @(inStock ? "btn-primary" : "btn-secondary") w-100 add-to-cart"
+                        data-product-id="@Model.Id"
+                        @(inStock ? "" : "disabled")>
+                    @(inStock ? "В корзину" : "Нет в наличии")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

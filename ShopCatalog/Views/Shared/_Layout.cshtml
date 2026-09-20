@@ -37,7 +37,9 @@
                             <a class="nav-link" asp-controller="Catalog" asp-action="Index">Каталог</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Cart" asp-action="Index">Корзина</a>
+                            <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                Корзина <span class="badge bg-danger" id="cartBadge">0</span>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Admin" asp-action="Index">Админ</a>

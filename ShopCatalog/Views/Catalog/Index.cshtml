@@ -3,97 +3,45 @@
     ViewData["Title"] = "Каталог товаров";
 }
 
-<div class="container my-4">
-    <h1 class="page-title">Каталог товаров</h1>
+    <div class="container my-4">
+        <h1 class="page-title">Каталог товаров</h1>
 
-    @{
-        var categories = ViewBag.Categories as List<string> ?? new List<string>();
-        var selected = ViewBag.SelectedCategory as string;
-    }
-
-    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="tagFilter">
-        <a asp-controller="Catalog" asp-action="Index"
-        class="btn btn-sm btn-outline-secondary rounded-pill @(string.IsNullOrEmpty(selected) ? "active" : "")"
-        data-tag="all">
-            Все
-        </a>
-
-        @foreach (var cat in categories)
-        {
-            <a asp-controller="Catalog" asp-action="Index" asp-route-category="@cat"
-            class="btn btn-sm btn-outline-secondary rounded-pill @(selected == cat ? "active" : "")"
-            data-tag="@cat">
-                @cat
-            </a>
+        @{
+            var categories = ViewBag.Categories as List<string> ?? new List<string>();
+            var selected = ViewBag.SelectedCategory as string;
         }
-    </div>
 
-    <div class="row g-4">
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="tagFilter">
+            <a asp-controller="Catalog" asp-action="Index"
+            class="btn btn-sm btn-outline-secondary rounded-pill @(string.IsNullOrEmpty(selected) ? "active" : "")"
+            data-tag="all">
+                Все
+            </a>
+
+            @foreach (var cat in categories)
+            {
+                <a asp-controller="Catalog" asp-action="Index" asp-route-category="@cat"
+                class="btn btn-sm btn-outline-secondary rounded-pill @(selected == cat ? "active" : "")"
+                data-tag="@cat">
+                    @cat
+                </a>
+            }
+        </div>
+
+    <input type="text"
+        id="searchInput"
+        class="form-control form-control-lg mb-4"
+        placeholder="Поиск товаров..."
+        autocomplete="off" />
+
+    <div id="catalogGrid" class="row g-4">
         @foreach (var product in Model)
         {
-            <div class="col-12 col-md-6 col-lg-4">
-                @{
-                    var inStock = product.Stock > 0;
-
-                    var borderClass = !inStock
-                        ? "border-danger"
-                        : (product.DiscountPercent > 30 ? "border-success" : "");
-
-                    var shadowClass = product.IsHit ? "shadow-sm" : "shadow-sm";
-
-                    string badgeText = null;
-                    string badgeCss = null;
-                    if (!inStock) { badgeText = "Нет в наличии"; badgeCss = "bg-danger"; }
-                    else if (product.IsHit) { badgeText = "ХИТ"; badgeCss = "bg-success text-white"; }
-                    else if (product.DiscountPercent > 30) { badgeText = $"Большая скидка −{product.DiscountPercent}%"; badgeCss = "bg-success"; }
-                    else if (product.DiscountPercent > 0) { badgeText = $"Скидка {product.DiscountPercent}%"; badgeCss = "bg-warning text-dark"; }
-                }
-                <div class="card h-100 @shadowClass @borderClass product-card @(inStock ? "" : "out-of-stock")">
-                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
-
-                    @if (badgeText != null)
-                    {
-                        <span class="badge @badgeCss position-absolute top-0 end-0 m-2">@badgeText</span>
-                    }
-
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text text-muted small">@product.Description</p>
-
-                        <div class="mt-auto">
-                            <ul class="list-group list-group-flush flex-column flex-md-row text-center mb-2">
-                                @if (product.OldPrice.HasValue)
-                                {
-                                    <li class="list-group-item px-0">
-                                        <small class="text-muted d-block">Обычная</small>
-                                        <s class="text-muted">@product.OldPrice.Value.ToString("N0") ₽</s>
-                                    </li>
-                                    <li class="list-group-item px-0">
-                                        <small class="text-muted d-block">Со скидкой</small>
-                                        <span class="fw-bold text-danger fs-5">@product.Price.ToString("N0") ₽</span>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li class="list-group-item px-0 flex-fill">
-                                        <small class="text-muted d-block">Цена</small>
-                                        <span class="fw-bold fs-5">@product.Price.ToString("N0") ₽</span>
-                                    </li>
-                                }
-                            </ul>
-
-                            <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
-                                <input type="hidden" name="productId" value="@product.Id" />
-                                <input type="hidden" name="name" value="@product.Name" />
-                                <input type="hidden" name="price" value="@product.Price" />
-                                <button type="submit" class="btn @(inStock ? "btn-primary" : "btn-secondary") w-100" @(inStock ? "" : "disabled")>
-                                    @(inStock ? "В корзину" : "Нет в наличии")
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <partial name="_ProductCard" model="product" />
         }
     </div>
+    @section Scripts {
+        <script src="~/js/search.js" asp-append-version="true"></script>
+        <script src="~/js/cart.js" asp-append-version="true"></script>
+    }
 </div>
