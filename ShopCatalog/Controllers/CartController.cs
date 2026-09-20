@@ -5,42 +5,46 @@ namespace ShopCatalog.Controllers;
 
 public class CartController : Controller
 {
-    private static readonly List<CartItem> _items = new();
-
     public IActionResult Index()
     {
         ViewData["Title"] = "Корзина";
-        return View(_items);
-    }
 
-    [HttpPost]
-    public IActionResult Add(int productId, string name, decimal price)
-    {
-        var existing = _items.FirstOrDefault(i => i.ProductId == productId);
-        if (existing != null)
-        {
-            existing.Quantity++;
-        }
-        else
-        {
-            _items.Add(new CartItem { ProductId = productId, Name = name, Price = price });
-        }
+        var cart = HttpContext.Session.GetString("Cart");
+        var ids = string.IsNullOrEmpty(cart)
+            ? new List<int>()
+            : cart.Split(',').Select(int.Parse).ToList();
 
-        TempData["Added"] = name;
-        return RedirectToAction(nameof(Index));
+        var items = ids
+            .GroupBy(id => id)
+            .Select(g =>
+            {
+                var p = ShopData.Products.FirstOrDefault(x => x.Id == g.Key);
+                if (p == null) return null;
+                return new CartItem
+                {
+                    ProductId = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Quantity = g.Count()
+                };
+            })
+            .Where(x => x != null)
+            .ToList()!;
+
+        return View(items);
     }
 
     [HttpPost]
     public IActionResult Clear()
     {
-        _items.Clear();
+        HttpContext.Session.Remove("Cart");
         return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
     public IActionResult Checkout()
     {
-        _items.Clear();
+        HttpContext.Session.Remove("Cart");
         TempData["OrderSuccess"] = "Заказ успешно оформлен!";
         return RedirectToAction(nameof(ThankYou));
     }

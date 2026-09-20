@@ -11,3 +11,18 @@
         });
     });
 })();
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const badge = document.getElementById('cartBadge');
+    if (!badge) return;
+
+    try {
+        const response = await fetch('/Catalog/GetCartCount');
+        if (!response.ok) return;
+
+        const data = await response.json();
+        badge.textContent = data.count ?? 0;
+    } catch (error) {
+        console.error('Не удалось получить количество товаров:', error);
+    }
+});

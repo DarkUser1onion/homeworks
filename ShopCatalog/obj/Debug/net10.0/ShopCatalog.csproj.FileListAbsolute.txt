@@ -95,9 +95,11 @@
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/ShopCatalog.pdb
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/ShopCatalog.genruntimeconfig.cache
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/ref/ShopCatalog.dll
-/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/2ssmoi43zi-{0}-rziha880fl-rziha880fl.gz
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/g9vkz6cav1-{0}-c7v8q6tm7f-c7v8q6tm7f.gz
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/9k55fr0ieo-{0}-lq8j1lu8df-lq8j1lu8df.gz
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/6f37pjq4uz-{0}-qyg8mregch-qyg8mregch.gz
-/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/pwyhixz5vh-{0}-5ipweew5fc-5ipweew5fc.gz
-/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/p48kf1jb9n-{0}-kyl7lf60vn-kyl7lf60vn.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/pwyhixz5vh-{0}-vq2s6kg0iv-vq2s6kg0iv.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/2ssmoi43zi-{0}-y8x6tnopv7-y8x6tnopv7.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/l6sy6ahuym-{0}-j8ilhg8kwg-j8ilhg8kwg.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/p48kf1jb9n-{0}-mke80ldqnr-mke80ldqnr.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/k9wup2bpg0-{0}-y107zhabtv-y107zhabtv.gz

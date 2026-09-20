@@ -4,9 +4,16 @@
 
     if (!input || !grid) return;
 
+    const saved = sessionStorage.getItem('catalogSearch');
+    if (saved && saved.trim().length >= 2) {
+        input.value = saved;
+        searchProducts(saved.trim());
+    }
+
     let timeoutId;
 
     input.addEventListener('input', function () {
+        sessionStorage.setItem('catalogSearch', input.value);
         clearTimeout(timeoutId);
 
         const query = input.value.trim();

@@ -18,5 +18,15 @@
       "enabled": true,
       "renameLocals": true
     }
+  },
+  {
+    "outputFileName": "wwwroot/js/search.min.js",
+    "inputFiles": ["wwwroot/js/search.js"],
+    "minify": { "enabled": true, "renameLocals": true }
+  },
+  {
+    "outputFileName": "wwwroot/js/cart.min.js",
+    "inputFiles": ["wwwroot/js/cart.js"],
+    "minify": { "enabled": true, "renameLocals": true }
   }
 ]
