@@ -17,11 +17,16 @@ public class CatalogController : Controller
             .ToList();
         ViewBag.SelectedCategory = category;
 
-        var items = string.IsNullOrEmpty(category)
-            ? ShopData.Products
-            : ShopData.Products.Where(p => p.Category == category).ToList();
+        const int pageSize = 6;
 
-        return View(items);
+        var filtered = string.IsNullOrEmpty(category)
+        ? ShopData.Products
+        : ShopData.Products.Where(p => p.Category == category).ToList();
+
+        var firstPage = filtered.Take(pageSize).ToList();
+        ViewBag.TotalCount = filtered.Count;
+
+        return View(firstPage);
     }
 
     [HttpGet]
@@ -72,4 +77,22 @@ public class CatalogController : Controller
         var count = string.IsNullOrEmpty(cart) ? 0 : cart.Split(',').Length;
         return Json(new { count });
     }
+    [HttpGet]
+    public IActionResult LoadMore(int page = 2)
+    {
+        const int pageSize = 6;
+        var all = ShopData.Products;
+        var total = all.Count;
+
+        var skip = pageSize * (page - 1);
+        var items = all.Skip(skip).Take(pageSize).ToList();
+
+        if (items.Count == 0)
+        {
+            return Content(string.Empty);
+        }
+
+        return PartialView("_ProductList", items);
+    }
+
 }

@@ -99,7 +99,8 @@
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/9k55fr0ieo-{0}-lq8j1lu8df-lq8j1lu8df.gz
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/6f37pjq4uz-{0}-qyg8mregch-qyg8mregch.gz
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/2ssmoi43zi-{0}-y8x6tnopv7-y8x6tnopv7.gz
-/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/p48kf1jb9n-{0}-mke80ldqnr-mke80ldqnr.gz
-/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/k9wup2bpg0-{0}-xy7g6cqsad-xy7g6cqsad.gz
 /home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/pwyhixz5vh-{0}-4bp9s162em-4bp9s162em.gz
-/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/l6sy6ahuym-{0}-itu1ushh52-itu1ushh52.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/l6sy6ahuym-{0}-0cjpwvef05-0cjpwvef05.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/izv8oulbjp-{0}-88blb15415-88blb15415.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/p48kf1jb9n-{0}-equ0pieczb-equ0pieczb.gz
+/home/Whoami/Desktop/homeworks/ShopCatalog/obj/Debug/net10.0/compressed/k9wup2bpg0-{0}-kesbcnajgo-kesbcnajgo.gz

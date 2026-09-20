@@ -31,6 +31,7 @@
     });
 
     async function searchProducts(query) {
+        window.__infiniteDisabled = true;
         grid.innerHTML =
             '<div class="text-center py-5 w-100">' +
             '  <div class="spinner-border text-primary" role="status">' +
