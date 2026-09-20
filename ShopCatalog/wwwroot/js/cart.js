@@ -31,7 +31,9 @@
                 const badge = document.getElementById('cartBadge');
                 if (badge) badge.textContent = data.cartCount;
 
-                button.innerHTML = 'Добавлено ✓';
+                showCartToast('Товар «' + data.productName + '» добавлен в корзину');
+
+                button.innerHTML = '✓ Добавлено';
                 button.classList.remove('btn-primary');
                 button.classList.add('btn-success');
 
@@ -40,7 +42,7 @@
                     button.classList.remove('btn-success');
                     button.classList.add('btn-primary');
                     button.disabled = false;
-                }, 2000);
+                }, 1000);
             } else {
                 alert('Ошибка: ' + data.message);
                 button.textContent = originalText;
@@ -55,5 +57,15 @@
                 button.textContent = originalText;
             }, 2000);
         }
+    }
+    function showCartToast(message) {
+        const toastEl = document.getElementById('cartToast');
+        const toastText = document.getElementById('cartToastText');
+        if (!toastEl || !toastText) return;
+
+        toastText.textContent = message;
+
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
     }
 })();
