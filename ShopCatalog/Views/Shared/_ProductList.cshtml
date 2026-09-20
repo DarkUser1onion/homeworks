@@ -1,0 +1,6 @@
+@model IEnumerable<ShopCatalog.Models.Product>
+
+@foreach (var product in Model)
+{
+    <partial name="_ProductCard" model="product" />
+}
