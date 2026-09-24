@@ -38,19 +38,35 @@
             <summary>Управление задачами (v1).</summary>
         </member>
         <member name="T:TaskFlowApi.Controllers.TasksV2Controller">
-            <summary>Управление задачами (v2) - с Priority, без Description в ответе.</summary>
+            <summary>Управление задачами (v2) - Priority, пагинация, идемпотентность.</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.TasksV2Controller.GetAll">
-            <summary>Список задач v2 - есть priority, нет description.</summary>
+        <member name="M:TaskFlowApi.Controllers.TasksV2Controller.GetPaged(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Список задач с пагинацией, фильтрацией, сортировкой и поиском.</summary>
+            <param name="page">Номер страницы (по умолчанию 1).</param>
+            <param name="pageSize">Размер страницы (по умолчанию 10, максимум 50).</param>
+            <param name="status">Фильтр по статусу.</param>
+            <param name="priority">Фильтр по приоритету.</param>
+            <param name="sortBy">Поле сортировки: title, dueDate, createdAt.</param>
+            <param name="sortDir">Направление: asc / desc.</param>
+            <param name="search">Поиск по Title (содержит).</param>
         </member>
         <member name="M:TaskFlowApi.Controllers.TasksV2Controller.GetById(System.Int32)">
-            <summary>Задача v2 - есть priority, нет description.</summary>
+            <summary>Задача v2 по ID.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.TasksV2Controller.Create(TaskFlowApi.DTOs.CreateTaskDto)">
+            <summary>Создать задачу с защитой от дубликатов через X-Idempotency-Key.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.TasksV2Controller.ChangeStatus(System.Int32,TaskFlowApi.DTOs.TaskStatusUpdateDto)">
+            <summary>Сменить статус задачи. Нельзя закрыть без комментариев.</summary>
         </member>
         <member name="T:TaskFlowApi.Entities.Comment">
             <summary>Комментарий к задаче.</summary>
         </member>
         <member name="T:TaskFlowApi.Entities.TaskItem">
             <summary>Задача внутри проекта.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Services.IdempotencyService.ComputeHash(System.Object)">
+            <summary>Хэш тела запроса - SHA256 от сериализованного объекта.</summary>
         </member>
         <member name="T:Program">
             <summary>

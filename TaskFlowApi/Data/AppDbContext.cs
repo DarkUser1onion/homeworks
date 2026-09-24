@@ -5,6 +5,7 @@ namespace TaskFlowApi.Data;
 
 public class AppDbContext : DbContext
 {
+    public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<Project> Projects => Set<Project>();
@@ -14,6 +15,10 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder b)
     {
+        b.Entity<IdempotencyRecord>()
+            .HasIndex(x => x.Key)
+            .IsUnique();
+
         b.Entity<TaskItem>()
             .HasOne(t => t.Project)
             .WithMany(p => p.Tasks)

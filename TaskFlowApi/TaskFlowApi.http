@@ -71,3 +71,48 @@ Content-Type: application/json
 
 ### Комментарии к несуществующей задаче → 404
 GET {{baseUrl}}/api/v1/tasks/999/comments
+
+### v2: пагинация + фильтр + сортировка
+GET {{baseUrl}}/api/v2/tasks?page=1&pageSize=5&status=ToDo&sortBy=createdAt&sortDir=desc
+
+### v2: поиск
+GET {{baseUrl}}/api/v2/tasks?page=1&pageSize=10&search=Первая
+
+### v2: pageSize > 50 → 400
+GET {{baseUrl}}/api/v2/tasks?page=1&pageSize=100
+
+### v2: создать с Idempotency-Key
+POST {{baseUrl}}/api/v2/tasks
+X-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json
+
+{ "title": "Новая задача через API", "priority": "High", "projectId": 1 }
+
+### v2: тот же ключ + то же тело → тот же ответ
+POST {{baseUrl}}/api/v2/tasks
+X-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json
+
+{ "title": "Новая задача через API", "priority": "High", "projectId": 1 }
+
+### v2: тот же ключ + другое тело → 409
+POST {{baseUrl}}/api/v2/tasks
+X-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json
+
+{ "title": "Другая задача", "priority": "Low", "projectId": 1 }
+
+### v2: без ключа → 400
+POST {{baseUrl}}/api/v2/tasks
+Content-Type: application/json
+
+{ "title": "Без ключа", "priority": "Medium", "projectId": 1 }
+
+### v2: несуществующая задача → 404 ProblemDetails
+GET {{baseUrl}}/api/v2/tasks/9999
+
+### v2: закрыть без комментариев → 422
+PATCH {{baseUrl}}/api/v2/tasks/1/status
+Content-Type: application/json
+
+{ "status": "Done" }
