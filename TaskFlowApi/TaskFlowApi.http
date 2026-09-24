@@ -53,3 +53,21 @@ POST {{baseUrl}}/api/tasks
 Content-Type: application/json
 
 { "title": "abc", "projectId": 1 }
+
+### v1: задача (есть description, нет priority)
+GET {{baseUrl}}/api/v1/tasks/1
+
+### v2: задача (есть priority, нет description)
+GET {{baseUrl}}/api/v2/tasks/1
+
+### Комментарии задачи 1
+GET {{baseUrl}}/api/v1/tasks/1/comments
+
+### Добавить комментарий
+POST {{baseUrl}}/api/v1/tasks/1/comments
+Content-Type: application/json
+
+{ "content": "Нужно уточнить ТЗ", "authorId": 1 }
+
+### Комментарии к несуществующей задаче → 404
+GET {{baseUrl}}/api/v1/tasks/999/comments

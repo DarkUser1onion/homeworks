@@ -1,80 +1,94 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TaskFlowApi.Data;
+using TaskFlowApi.DTOs;
 using TaskFlowApi.Entities;
+using TaskFlowApi.Mapping;
 
 namespace TaskFlowApi.Controllers;
 
-/// <summary>Управление задачами.</summary>
+/// <summary>Управление задачами (v1).</summary>
 [ApiController]
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
 public class TasksController : ControllerBase
 {
-    private static readonly List<TaskItem> _tasks = new();
-    private static int _nextId = 1;
+    private readonly AppDbContext _db;
+    public TasksController(AppDbContext db) => _db = db;
 
-    /// <summary>Список всех задач.</summary>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<TaskItem>), StatusCodes.Status200OK)]
-    public ActionResult<IEnumerable<TaskItem>> GetAll()
-        => Ok(_tasks);
+    [ProducesResponseType(typeof(IEnumerable<TaskItemDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<TaskItemDto>>> GetAll()
+    {
+        var items = await _db.Tasks.Include(t => t.AssignedTo).ToListAsync();
+        return Ok(items.Select(t => t.ToDto()));
+    }
 
-    /// <summary>Получить задачу по ID.</summary>
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(TaskItem), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<TaskItem> GetById(int id)
+    public async Task<ActionResult<TaskItemDto>> GetById(int id)
     {
-        var t = _tasks.FirstOrDefault(x => x.Id == id);
-        return t is null ? NotFound() : Ok(t);
+        var t = await _db.Tasks.Include(x => x.AssignedTo).FirstOrDefaultAsync(x => x.Id == id);
+        return t is null ? NotFound() : Ok(t.ToDto());
     }
 
-    /// <summary>Создать задачу. Если Status не указан - по умолчанию ToDo.</summary>
     [HttpPost]
-    [ProducesResponseType(typeof(TaskItem), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<TaskItem> Create([FromBody] TaskItem input)
+    public async Task<ActionResult<TaskItemDto>> Create([FromBody] CreateTaskDto input)
     {
-        // Если Status не пришёл - enum по умолчанию уже ToDo (см. TaskItem).
-        input.Id = _nextId++;
-        input.CreatedAt = DateTime.UtcNow;
-        _tasks.Add(input);
+        if (!await _db.Projects.AnyAsync(p => p.Id == input.ProjectId))
+            return BadRequest(new { message = "Проект не найден" });
 
-        return CreatedAtAction(nameof(GetById), new { id = input.Id }, input);
+        var t = new TaskItem
+        {
+            Title = input.Title,
+            Description = input.Description,
+            Status = input.Status,
+            Priority = input.Priority,
+            ProjectId = input.ProjectId,
+            AssignedToId = input.AssignedToId,
+            DueDate = input.DueDate
+        };
+        _db.Tasks.Add(t);
+        await _db.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetById), new { id = t.Id, version = "1" }, t.ToDto());
     }
 
-    /// <summary>Полностью обновить задачу. Status обязателен при PUT.</summary>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult Update(int id, [FromBody] TaskItem input)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateTaskDto input)
     {
-
-        var t = _tasks.FirstOrDefault(x => x.Id == id);
+        var t = await _db.Tasks.FindAsync(id);
         if (t is null) return NotFound();
-
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!input.Status.HasValue) return BadRequest(new { message = "Status обязателен" });
 
         t.Title = input.Title;
         t.Description = input.Description;
-        t.Status = input.Status;
-        t.ProjectId = input.ProjectId;
+        t.Status = input.Status.Value;
+        t.Priority = input.Priority;
         t.AssignedToId = input.AssignedToId;
         t.DueDate = input.DueDate;
-
+        await _db.SaveChangesAsync();
         return NoContent();
     }
 
-    /// <summary>Удалить задачу.</summary>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var t = _tasks.FirstOrDefault(x => x.Id == id);
+        var t = await _db.Tasks.FindAsync(id);
         if (t is null) return NotFound();
 
-        _tasks.Remove(t);
+        _db.Tasks.Remove(t);
+        await _db.SaveChangesAsync();
         return NoContent();
     }
 }

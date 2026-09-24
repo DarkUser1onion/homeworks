@@ -4,51 +4,53 @@
         <name>TaskFlowApi</name>
     </assembly>
     <members>
+        <member name="T:TaskFlowApi.Controllers.CommentsController">
+            <summary>Комментарии задач (вложенный ресурс).</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.CommentsController.GetForTask(System.Int32)">
+            <summary>Список комментариев задачи.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.CommentsController.Create(System.Int32,TaskFlowApi.DTOs.CreateCommentDto)">
+            <summary>Добавить комментарий к задаче.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.CommentsController.Delete(System.Int32)">
+            <summary>Удалить комментарий.</summary>
+        </member>
         <member name="T:TaskFlowApi.Controllers.ProjectsController">
             <summary>Управление проектами.</summary>
         </member>
         <member name="M:TaskFlowApi.Controllers.ProjectsController.GetAll">
-            <summary>Получить список всех проектов.</summary>
-            <response code="200">Список проектов (может быть пустым).</response>
+            <summary>Список всех проектов.</summary>
         </member>
         <member name="M:TaskFlowApi.Controllers.ProjectsController.GetById(System.Int32)">
-            <summary>Получить проект по идентификатору.</summary>
-            <param name="id">ID проекта.</param>
-            <response code="200">Проект найден.</response>
-            <response code="404">Проект не найден.</response>
+            <summary>Проект по ID.</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.ProjectsController.Create(TaskFlowApi.Entities.Project)">
-            <summary>Создать новый проект.</summary>
-            <response code="201">Проект создан, в заголовке Location - ссылка на него.</response>
-            <response code="400">Ошибка валидации.</response>
+        <member name="M:TaskFlowApi.Controllers.ProjectsController.Create(TaskFlowApi.DTOs.CreateProjectDto)">
+            <summary>Создать проект.</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.ProjectsController.Update(System.Int32,TaskFlowApi.Entities.Project)">
-            <summary>Полностью обновить проект.</summary>
-            <response code="204">Обновлено успешно.</response>
-            <response code="404">Проект не найден.</response>
+        <member name="M:TaskFlowApi.Controllers.ProjectsController.Update(System.Int32,TaskFlowApi.DTOs.UpdateProjectDto)">
+            <summary>Обновить проект.</summary>
         </member>
         <member name="M:TaskFlowApi.Controllers.ProjectsController.Delete(System.Int32)">
-            <summary>Удалить проект.</summary>
-            <response code="204">Удалено успешно.</response>
-            <response code="404">Проект не найден.</response>
+            <summary>Удалить проект (задачи удалятся каскадно).</summary>
         </member>
         <member name="T:TaskFlowApi.Controllers.TasksController">
-            <summary>Управление задачами.</summary>
+            <summary>Управление задачами (v1).</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.TasksController.GetAll">
-            <summary>Список всех задач.</summary>
+        <member name="T:TaskFlowApi.Controllers.TasksV2Controller">
+            <summary>Управление задачами (v2) - с Priority, без Description в ответе.</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.TasksController.GetById(System.Int32)">
-            <summary>Получить задачу по ID.</summary>
+        <member name="M:TaskFlowApi.Controllers.TasksV2Controller.GetAll">
+            <summary>Список задач v2 - есть priority, нет description.</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.TasksController.Create(TaskFlowApi.Entities.TaskItem)">
-            <summary>Создать задачу. Если Status не указан - по умолчанию ToDo.</summary>
+        <member name="M:TaskFlowApi.Controllers.TasksV2Controller.GetById(System.Int32)">
+            <summary>Задача v2 - есть priority, нет description.</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.TasksController.Update(System.Int32,TaskFlowApi.Entities.TaskItem)">
-            <summary>Полностью обновить задачу. Status обязателен при PUT.</summary>
+        <member name="T:TaskFlowApi.Entities.Comment">
+            <summary>Комментарий к задаче.</summary>
         </member>
-        <member name="M:TaskFlowApi.Controllers.TasksController.Delete(System.Int32)">
-            <summary>Удалить задачу.</summary>
+        <member name="T:TaskFlowApi.Entities.TaskItem">
+            <summary>Задача внутри проекта.</summary>
         </member>
         <member name="T:Program">
             <summary>
