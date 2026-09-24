@@ -32,11 +32,23 @@
             <response code="204">Удалено успешно.</response>
             <response code="404">Проект не найден.</response>
         </member>
-        <member name="T:TaskFlowApi.Entities.Project">
-            <summary>Проект - верхнеуровневая сущность, содержит задачи.</summary>
+        <member name="T:TaskFlowApi.Controllers.TasksController">
+            <summary>Управление задачами.</summary>
         </member>
-        <member name="P:TaskFlowApi.Entities.Project.Name">
-            <summary>Название проекта.</summary>
+        <member name="M:TaskFlowApi.Controllers.TasksController.GetAll">
+            <summary>Список всех задач.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.TasksController.GetById(System.Int32)">
+            <summary>Получить задачу по ID.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.TasksController.Create(TaskFlowApi.Entities.TaskItem)">
+            <summary>Создать задачу. Если Status не указан - по умолчанию ToDo.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.TasksController.Update(System.Int32,TaskFlowApi.Entities.TaskItem)">
+            <summary>Полностью обновить задачу. Status обязателен при PUT.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.TasksController.Delete(System.Int32)">
+            <summary>Удалить задачу.</summary>
         </member>
         <member name="T:Program">
             <summary>
