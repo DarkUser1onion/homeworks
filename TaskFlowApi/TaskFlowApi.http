@@ -29,3 +29,27 @@ Content-Type: application/json
 
 ### Получить задачу
 GET {{baseUrl}}/api/tasks/1
+
+### Пустое имя → 400
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+
+{ "name": "", "description": "test" }
+
+### Короткое имя → 400
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+
+{ "name": "ab", "description": "test" }
+
+### Задача: DueDate в прошлом → 400
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{ "title": "Новая задача", "projectId": 1, "dueDate": "2020-01-01T00:00:00Z" }
+
+### Задача: короткий Title → 400
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{ "title": "abc", "projectId": 1 }
