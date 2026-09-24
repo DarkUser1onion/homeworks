@@ -20,3 +20,12 @@ Content-Type: application/json
 
 ### Удалить
 DELETE {{baseUrl}}/api/projects/1
+
+### Создать задачу
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{ "title": "Сверстать главную", "status": "ToDo", "projectId": 1 }
+
+### Получить задачу
+GET {{baseUrl}}/api/tasks/1
