@@ -4,6 +4,34 @@
         <name>TaskFlowApi</name>
     </assembly>
     <members>
+        <member name="T:TaskFlowApi.Controllers.ProjectsController">
+            <summary>Управление проектами.</summary>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.ProjectsController.GetAll">
+            <summary>Получить список всех проектов.</summary>
+            <response code="200">Список проектов (может быть пустым).</response>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.ProjectsController.GetById(System.Int32)">
+            <summary>Получить проект по идентификатору.</summary>
+            <param name="id">ID проекта.</param>
+            <response code="200">Проект найден.</response>
+            <response code="404">Проект не найден.</response>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.ProjectsController.Create(TaskFlowApi.Entities.Project)">
+            <summary>Создать новый проект.</summary>
+            <response code="201">Проект создан, в заголовке Location - ссылка на него.</response>
+            <response code="400">Ошибка валидации.</response>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.ProjectsController.Update(System.Int32,TaskFlowApi.Entities.Project)">
+            <summary>Полностью обновить проект.</summary>
+            <response code="204">Обновлено успешно.</response>
+            <response code="404">Проект не найден.</response>
+        </member>
+        <member name="M:TaskFlowApi.Controllers.ProjectsController.Delete(System.Int32)">
+            <summary>Удалить проект.</summary>
+            <response code="204">Удалено успешно.</response>
+            <response code="404">Проект не найден.</response>
+        </member>
         <member name="T:TaskFlowApi.Entities.Project">
             <summary>Проект - верхнеуровневая сущность, содержит задачи.</summary>
         </member>

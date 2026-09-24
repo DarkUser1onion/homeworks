@@ -1,6 +1,22 @@
-@TaskFlowApi_HostAddress = http://localhost:5207
+@baseUrl = https://localhost:5207
 
-GET {{TaskFlowApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### Создать проект
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
 
-###
+{ "name": "Веб-сайт", "description": "Корпоративный портал" }
+
+### Получить все
+GET {{baseUrl}}/api/projects
+
+### Получить по ID
+GET {{baseUrl}}/api/projects/1
+
+### Обновить
+PUT {{baseUrl}}/api/projects/1
+Content-Type: application/json
+
+{ "name": "Веб-сайт v2", "description": "Обновлённый портал" }
+
+### Удалить
+DELETE {{baseUrl}}/api/projects/1
