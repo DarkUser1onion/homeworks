@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Realtime Panel</title>
+</head>
+<body>
+    <h1>Realtime Panel</h1>
+
+    <p>Статус: <b id="status">подключение...</b></p>
+    <p>Ваш ID: <code id="connId">—</code></p>
+
+    <hr />
+
+    <div id="log" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:auto; font-family:monospace;"></div>
+
+    <hr />
+
+    <input id="msgInput" type="text" placeholder="Сообщение..." />
+    <button id="sendBtn" disabled>Отправить</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
