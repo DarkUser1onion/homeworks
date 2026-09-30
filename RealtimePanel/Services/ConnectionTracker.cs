@@ -24,12 +24,14 @@ public class ConnectionTracker
     {
         lock (_lock) _connections[connId] = "";
         await BroadcastCountAsync();
+        await BroadcastListAsync();
     }
 
     public async Task RemoveAsync(string connId)
     {
         lock (_lock) _connections.Remove(connId);
         await BroadcastCountAsync();
+        await BroadcastListAsync();
     }
 
     public async Task UpdateRoomAsync(string connId, string? room)
@@ -39,6 +41,7 @@ public class ConnectionTracker
             if (_connections.ContainsKey(connId))
                 _connections[connId] = room ?? "";
         }
+        await BroadcastListAsync();
     }
 
     public async Task BroadcastCountAsync()
@@ -63,5 +66,21 @@ public class ConnectionTracker
     {
         if (string.IsNullOrWhiteSpace(connectionId) || string.IsNullOrWhiteSpace(text)) return;
         await _hub.Clients.Client(connectionId).SendAsync("ExternalPrivateMessage", text);
+    }
+
+    public async Task BroadcastListAsync()
+    {
+        List<object> snapshot;
+        lock (_lock)
+        {
+            snapshot = _connections
+                .Select(kv => (object)new
+                {
+                    connectionId = kv.Key,
+                    room = string.IsNullOrEmpty(kv.Value) ? null : kv.Value
+                })
+                .ToList();
+        }
+        await _hub.Clients.All.SendAsync("UserList", snapshot);
     }
 }

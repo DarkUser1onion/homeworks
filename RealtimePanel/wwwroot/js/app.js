@@ -25,6 +25,8 @@ const sendExternalRoomBtn   = document.getElementById('sendExternalRoomBtn');
 
 const typingIndicatorEl = document.getElementById('typingIndicator');
 
+const userListEl = document.getElementById('userList');
+
 let currentRoom = null;
 
 const connection = new signalR.HubConnectionBuilder()
@@ -92,6 +94,35 @@ connection.on('PrivateMessageSent', function (targetId, text) {
 
 connection.on('ExternalRoomMessage', function (roomName, text) {
     log('[внешнее в комнату ' + roomName + '] ' + text);
+});
+
+connection.on('UserList', function (users) {
+    if (!users || users.length === 0) {
+        userListEl.innerHTML = '<i style="color:#888;">Список пуст…</i>';
+        return;
+    }
+
+    userListEl.innerHTML = '';
+
+    users.forEach(function (u) {
+        const row = document.createElement('div');
+        row.style.padding = '3px 0';
+        row.style.cursor = 'pointer';
+        row.style.borderBottom = '1px solid #eee';
+
+        const isSelf = u.connectionId === connection.connectionId;
+        if (isSelf) row.style.fontWeight = 'bold';
+
+        const roomLabel = u.room ? u.room : '—';
+        row.textContent = (isSelf ? '@ ' : '  ') + u.connectionId + '  [' + roomLabel + ']';
+
+        row.addEventListener('click', function () {
+            privateTargetInput.value = u.connectionId;
+            log('ID ' + u.connectionId + ' подставлен в поле приватного сообщения');
+        });
+
+        userListEl.appendChild(row);
+    });
 });
 
 connection.onreconnecting(function (error) {
