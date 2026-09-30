@@ -23,6 +23,8 @@ const externalRoomInput     = document.getElementById('externalRoomInput');
 const externalRoomTextInput = document.getElementById('externalRoomTextInput');
 const sendExternalRoomBtn   = document.getElementById('sendExternalRoomBtn');
 
+const typingIndicatorEl = document.getElementById('typingIndicator');
+
 let currentRoom = null;
 
 const connection = new signalR.HubConnectionBuilder()
@@ -95,6 +97,18 @@ connection.on('ExternalRoomMessage', function (roomName, text) {
 connection.onreconnecting(function (error) {
     setStatus('Переподключение...');
     log('Соединение потеряно. Переподключаемся...');
+});
+
+let typingTimeoutId = null;
+
+connection.on('UserTyping', function (senderId, roomName) {
+    typingIndicatorEl.textContent = 'Печатает (' + roomName + '): ' + senderId;
+    typingIndicatorEl.style.display = 'block';
+
+    clearTimeout(typingTimeoutId);
+    typingTimeoutId = setTimeout(function () {
+        typingIndicatorEl.style.display = 'none';
+    }, 2000);
 });
 
 connection.onreconnected(async function (newConnectionId) {
@@ -199,6 +213,14 @@ input.addEventListener('keydown', function (e) {
 joinBtn.addEventListener('click', joinRoom);
 leaveBtn.addEventListener('click', leaveRoom);
 sendRoomBtn.addEventListener('click', sendToRoom);
+let typingSendTimeoutId = null;
+roomMsgInput.addEventListener('input', function () {
+    if (!currentRoom) return;
+    clearTimeout(typingSendTimeoutId);
+    typingSendTimeoutId = setTimeout(function () {
+        connection.invoke('Typing', currentRoom);
+    }, 500);
+});
 roomMsgInput.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') sendToRoom();
 });

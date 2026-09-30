@@ -58,4 +58,11 @@ public class ActivityHub : Hub
         await Clients.Client(targetConnectionId).SendAsync("PrivateMessage", Context.ConnectionId, text);
         await Clients.Caller.SendAsync("PrivateMessageSent", targetConnectionId, text);
     }
+
+    public async Task Typing(string roomName)
+    {
+        if (string.IsNullOrWhiteSpace(roomName)) return;
+        
+        await Clients.OthersInGroup(roomName).SendAsync("UserTyping", Context.ConnectionId, roomName);
+    }
 }
