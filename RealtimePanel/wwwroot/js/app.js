@@ -4,15 +4,21 @@ const logEl    = document.getElementById('log');
 const input    = document.getElementById('msgInput');
 const sendBtn  = document.getElementById('sendBtn');
 
+const roomInput     = document.getElementById('roomInput');
+const joinBtn       = document.getElementById('joinBtn');
+const leaveBtn      = document.getElementById('leaveBtn');
+const roomMsgInput  = document.getElementById('roomMsgInput');
+const sendRoomBtn   = document.getElementById('sendRoomBtn');
+const currentRoomEl = document.getElementById('currentRoom');
+
+let currentRoom = null;
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl('/hubs/activity')
-    .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
-    .configureLogging(signalR.LogLevel.Information)
     .build();
 
-function appendEntry(kind, text) {
+function log(text) {
     const div = document.createElement('div');
-    div.className = 'entry ' + kind;
     const time = new Date().toLocaleTimeString('ru-RU', {
         hour: '2-digit',
         minute: '2-digit',
@@ -23,81 +29,93 @@ function appendEntry(kind, text) {
     logEl.scrollTop = logEl.scrollHeight;
 }
 
-function setStatus(text, cssClass) {
-    statusEl.textContent = text;
-    statusEl.className = 'status ' + cssClass;
-}
-
-connection.on('UserConnected', (connId) => {
-    appendEntry('system', 'Подключился пользователь' + connId);
+connection.on('UserConnected', function (connId) {
+    log('Подключился: ' + connId);
 });
 
-connection.on('UserDisconnected', (connId) => {
-    appendEntry('system', `Отключился пользователь <span class="who">${connId}</span>`);
+connection.on('UserDisconnected', function (connId) {
+    log('Отключился: ' + connId);
 });
 
-connection.on('ReceiveMessage', (senderId, text) => {
-    const isSelf = senderId === connection.connectionId;
-    const kind = isSelf ? 'message self' : 'message';
-    const label = isSelf ? 'Вы' : `<span class="who">${senderId}</span>`;
-    appendEntry(kind, `${label}: ${escapeHtml(text)}`);
+connection.on('ReceiveMessage', function (senderId, text) {
+    log(senderId + ': ' + text);
 });
 
-connection.onreconnecting(() => {
-    setStatus('Переподключение…', 'connecting');
-    appendEntry('system', 'Соединение потеряно, пытаемся переподключиться…');
+connection.on('RoomJoined', function (roomName) {
+    currentRoom = roomName;
+    currentRoomEl.textContent = roomName;
+    log('Вы вошли в комнату: ' + roomName);
 });
 
-connection.onreconnected((newId) => {
-    setStatus('Подключено', 'connected');
-    connIdEl.textContent = newId;
-    appendEntry('system', `Переподключено. Новый ID: <span class="who">${newId}</span>`);
+connection.on('RoomLeft', function (roomName) {
+    currentRoom = null;
+    currentRoomEl.textContent = '—';
+    log('Вы вышли из комнаты: ' + roomName);
 });
 
-connection.onclose(() => {
-    setStatus('Соединение потеряно', 'disconnected');
-    appendEntry('system', 'Соединение закрыто окончательно');
-    sendBtn.disabled = true;
+connection.on('ReceiveRoomMessage', function (senderId, roomName, text) {
+    log('[комната ' + roomName + '] ' + senderId + ': ' + text);
 });
 
 async function start() {
     try {
         await connection.start();
-        setStatus('Подключено', 'connected');
+        statusEl.textContent = 'подключено';
         connIdEl.textContent = connection.connectionId;
         sendBtn.disabled = false;
-        appendEntry('system', 'Подключено. Ваш ID: ' + connection.connectionId);
+        joinBtn.disabled = false;
+        leaveBtn.disabled = false;
+        sendRoomBtn.disabled = false;
+        log('Мы подключились. Наш ID: ' + connection.connectionId);
     } catch (err) {
-        setStatus('Ошибка подключения', 'disconnected');
-        appendEntry('system', 'Не удалось подключиться: ' + err);
+        statusEl.textContent = 'ошибка: ' + err;
         setTimeout(start, 3000);
     }
 }
 
-async function send() {
-    const text = input.value.trim();
+function send() {
+    const text = input.value;
     if (!text) return;
-    try {
-        await connection.invoke('SendMessage', text);
-        input.value = '';
-        input.focus();
-    } catch (err) {
-        appendEntry('system', 'Ошибка отправки: ' + err);
+    connection.invoke('SendMessage', text);
+    input.value = '';
+    input.focus();
+}
+
+async function joinRoom() {
+    const name = roomInput.value.trim();
+    if (!name) return;
+
+    if (currentRoom && currentRoom !== name) {
+        await connection.invoke('LeaveRoom', currentRoom);
     }
+
+    await connection.invoke('JoinRoom', name);
+}
+
+function leaveRoom() {
+    const name = roomInput.value;
+    if (!name) return;
+    connection.invoke('LeaveRoom', name);
+}
+
+function sendToRoom() {
+    const text = roomMsgInput.value;
+    if (!text || !currentRoom) return;
+    connection.invoke('SendToRoom', currentRoom, text);
+    roomMsgInput.value = '';
+    roomMsgInput.focus();
 }
 
 sendBtn.addEventListener('click', send);
-input.addEventListener('keydown', (e) => {
+input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') send();
 });
 
-function escapeHtml(s) {
-    return String(s)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-}
+joinBtn.addEventListener('click', joinRoom);
+leaveBtn.addEventListener('click', leaveRoom);
+sendRoomBtn.addEventListener('click', sendToRoom);
+roomMsgInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') sendToRoom();
+});
 
 start();

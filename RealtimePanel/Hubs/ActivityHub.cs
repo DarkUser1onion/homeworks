@@ -21,4 +21,27 @@ public class ActivityHub : Hub
         if (string.IsNullOrWhiteSpace(text)) return;
         await Clients.All.SendAsync("ReceiveMessage", Context.ConnectionId, text);
     }
+
+    public async Task JoinRoom(string roomName)
+    {
+        if (string.IsNullOrWhiteSpace(roomName)) return;
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+        await Clients.Caller.SendAsync("RoomJoined", roomName);
+    }
+
+    public async Task LeaveRoom(string roomName)
+    {
+        if (string.IsNullOrWhiteSpace(roomName)) return;
+
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
+        await Clients.Caller.SendAsync("RoomLeft", roomName);
+    }
+
+    public async Task SendToRoom(string roomName, string text)
+    {
+        if (string.IsNullOrWhiteSpace(roomName) || string.IsNullOrWhiteSpace(text)) return;
+
+        await Clients.Group(roomName).SendAsync("ReceiveRoomMessage", Context.ConnectionId, roomName, text);
+    }
 }

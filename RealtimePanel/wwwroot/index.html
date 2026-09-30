@@ -15,6 +15,19 @@
     <div id="log" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:auto; font-family:monospace;"></div>
 
     <hr />
+    <h3>Комнаты</h3>
+        <p>
+            <input id="roomInput" type="text" placeholder="Название комнаты" />
+            <button id="joinBtn" disabled>Войти</button>
+            <button id="leaveBtn" disabled>Выйти</button>
+        </p>
+        <p>Текущая комната: <b id="currentRoom">—</b></p>
+
+        <p>
+            <input id="roomMsgInput" type="text" placeholder="Сообщение в комнату..." />
+            <button id="sendRoomBtn" disabled>Отправить в комнату</button>
+        </p>
+    <hr />
 
     <input id="msgInput" type="text" placeholder="Сообщение..." />
     <button id="sendBtn" disabled>Отправить</button>
