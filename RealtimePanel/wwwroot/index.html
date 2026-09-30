@@ -9,6 +9,7 @@
 
     <p>Статус: <b id="status">подключение...</b></p>
     <p>Ваш ID: <code id="connId">—</code></p>
+    <p>Онлайн: <b id="onlineCount">0</b></p>
 
     <hr />
 
@@ -31,8 +32,14 @@
 
     <input id="msgInput" type="text" placeholder="Сообщение..." />
     <button id="sendBtn" disabled>Отправить</button>
-
+    
+    <hr />
+    <h3>Системное сообщение</h3>
+    <input id="systemInput" type="text" placeholder="Текст системного сообщения..." />
+    <button id="sendSystemBtn">Отправить всем</button>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="/js/app.js"></script>
+
 </body>
 </html>

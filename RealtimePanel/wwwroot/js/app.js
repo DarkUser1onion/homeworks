@@ -11,6 +11,10 @@ const roomMsgInput  = document.getElementById('roomMsgInput');
 const sendRoomBtn   = document.getElementById('sendRoomBtn');
 const currentRoomEl = document.getElementById('currentRoom');
 
+const onlineCountEl = document.getElementById('onlineCount');
+const systemInput   = document.getElementById('systemInput');
+const sendSystemBtn = document.getElementById('sendSystemBtn');
+
 let currentRoom = null;
 
 const connection = new signalR.HubConnectionBuilder()
@@ -55,6 +59,14 @@ connection.on('RoomLeft', function (roomName) {
 
 connection.on('ReceiveRoomMessage', function (senderId, roomName, text) {
     log('[комната ' + roomName + '] ' + senderId + ': ' + text);
+});
+
+connection.on('OnlineCount', function (count) {
+    onlineCountEl.textContent = count;
+});
+
+connection.on('SystemMessage', function (text) {
+    log('*** СИСТЕМА: ' + text + ' ***');
 });
 
 async function start() {
@@ -117,5 +129,27 @@ sendRoomBtn.addEventListener('click', sendToRoom);
 roomMsgInput.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') sendToRoom();
 });
+
+async function sendSystemMessage() {
+    const text = systemInput.value;
+    if (!text) return;
+
+    try {
+        const resp = await fetch('/api/system/message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        });
+        if (!resp.ok) {
+            log('Ошибка HTTP: ' + resp.status);
+        }
+    } catch (e) {
+        log('Ошибка: ' + e);
+    }
+
+    systemInput.value = '';
+}
+
+sendSystemBtn.addEventListener('click', sendSystemMessage);
 
 start();
