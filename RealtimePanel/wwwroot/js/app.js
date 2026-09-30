@@ -27,6 +27,12 @@ const typingIndicatorEl = document.getElementById('typingIndicator');
 
 const userListEl = document.getElementById('userList');
 
+const streamMaxInput    = document.getElementById('streamMaxInput');
+const streamStartBtn    = document.getElementById('streamStartBtn');
+const streamStopBtn     = document.getElementById('streamStopBtn');
+const streamLastEl      = document.getElementById('streamLast');
+const streamListEl      = document.getElementById('streamList');
+
 let currentRoom = null;
 
 const connection = new signalR.HubConnectionBuilder()
@@ -164,6 +170,14 @@ connection.onclose(function (error) {
     joinBtn.disabled = true;
     leaveBtn.disabled = true;
     sendRoomBtn.disabled = true;
+    sendPrivateBtn.disabled = true;
+    streamStartBtn.disabled = true;
+    streamStopBtn.disabled = true;
+
+    if (streamSubscription) {
+        streamSubscription.dispose();
+        streamSubscription = null;
+    }
 });
 
 async function start() {
@@ -176,6 +190,7 @@ async function start() {
         leaveBtn.disabled = false;
         sendRoomBtn.disabled = false;
         sendPrivateBtn.disabled = false;
+        streamStartBtn.disabled = false;
         log('Мы подключились. Наш ID: ' + connection.connectionId);
     } catch (err) {
         setStatus('ошибка: ' + err);
@@ -297,5 +312,56 @@ sendExternalRoomBtn.addEventListener('click', sendExternalRoom);
 externalRoomTextInput.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') sendExternalRoom();
 });
+
+let streamSubscription = null;
+
+function streamStart() {
+    if (streamSubscription) return;
+
+    const max = parseInt(streamMaxInput.value, 10) || 100;
+
+    streamListEl.innerHTML = '';
+    streamLastEl.textContent = '—';
+    streamStartBtn.disabled = true;
+    streamStopBtn.disabled = false;
+    log('Поток запущен (макс. ' + max + ')');
+
+    streamSubscription = connection.stream('StreamNumbers', max).subscribe({
+        next: function (value) {
+            streamLastEl.textContent = value;
+
+            const div = document.createElement('div');
+            div.textContent = value;
+            streamListEl.appendChild(div);
+            streamListEl.scrollTop = streamListEl.scrollHeight;
+        },
+        complete: function () {
+            log('Поток завершён сервером');
+            streamSubscription = null;
+            streamStartBtn.disabled = false;
+            streamStopBtn.disabled = true;
+        },
+        error: function (err) {
+            log('Ошибка потока: ' + err);
+            streamSubscription = null;
+            streamStartBtn.disabled = false;
+            streamStopBtn.disabled = true;
+        }
+    });
+}
+
+function streamStop() {
+    if (!streamSubscription) return;
+
+    streamSubscription.dispose();
+    streamSubscription = null;
+
+    streamStartBtn.disabled = false;
+    streamStopBtn.disabled = true;
+    log('Поток остановлен');
+}
+
+streamStartBtn.addEventListener('click', streamStart);
+streamStopBtn.addEventListener('click', streamStop);
 
 start();

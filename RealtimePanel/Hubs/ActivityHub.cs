@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 using RealtimePanel.Services;
+using System.Runtime.CompilerServices;
 
 namespace RealtimePanel.Hubs;
 
@@ -64,5 +65,26 @@ public class ActivityHub : Hub
         if (string.IsNullOrWhiteSpace(roomName)) return;
         
         await Clients.OthersInGroup(roomName).SendAsync("UserTyping", Context.ConnectionId, roomName);
+    }
+
+    public async IAsyncEnumerable<int> StreamNumbers(
+    int maxValue,
+    [EnumeratorCancellation] CancellationToken ct)
+    {
+        var rnd = new Random();
+
+        while (!ct.IsCancellationRequested)
+        {
+            yield return rnd.Next(0, maxValue + 1);
+
+            try
+            {
+                await Task.Delay(500, ct);
+            }
+            catch (TaskCanceledException)
+            {
+                yield break;
+            }
+        }
     }
 }
