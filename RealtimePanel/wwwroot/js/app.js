@@ -1,8 +1,9 @@
-const statusEl = document.getElementById('status');
-const connIdEl = document.getElementById('connId');
-const logEl    = document.getElementById('log');
-const input    = document.getElementById('msgInput');
-const sendBtn  = document.getElementById('sendBtn');
+const statusEl      = document.getElementById('status');
+const connIdEl      = document.getElementById('connId');
+const onlineCountEl = document.getElementById('onlineCount');
+const logEl         = document.getElementById('log');
+const input         = document.getElementById('msgInput');
+const sendBtn       = document.getElementById('sendBtn');
 
 const roomInput     = document.getElementById('roomInput');
 const joinBtn       = document.getElementById('joinBtn');
@@ -11,7 +12,6 @@ const roomMsgInput  = document.getElementById('roomMsgInput');
 const sendRoomBtn   = document.getElementById('sendRoomBtn');
 const currentRoomEl = document.getElementById('currentRoom');
 
-const onlineCountEl = document.getElementById('onlineCount');
 const systemInput   = document.getElementById('systemInput');
 const sendSystemBtn = document.getElementById('sendSystemBtn');
 
@@ -19,18 +19,21 @@ let currentRoom = null;
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl('/hubs/activity')
+    .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
     .build();
 
 function log(text) {
     const div = document.createElement('div');
     const time = new Date().toLocaleTimeString('ru-RU', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
     });
     div.textContent = '[' + time + '] ' + text;
     logEl.appendChild(div);
     logEl.scrollTop = logEl.scrollHeight;
+}
+
+function setStatus(text) {
+    statusEl.textContent = text;
 }
 
 connection.on('UserConnected', function (connId) {
@@ -69,10 +72,39 @@ connection.on('SystemMessage', function (text) {
     log('*** СИСТЕМА: ' + text + ' ***');
 });
 
+connection.onreconnecting(function (error) {
+    setStatus('Переподключение...');
+    log('Соединение потеряно. Переподключаемся...');
+});
+
+connection.onreconnected(async function (newConnectionId) {
+    setStatus('подключено');
+    connIdEl.textContent = newConnectionId;
+    log('Переподключено. Новый ID: ' + newConnectionId);
+
+    if (currentRoom) {
+        try {
+            await connection.invoke('JoinRoom', currentRoom);
+            log('Автоматически вернулись в комнату: ' + currentRoom);
+        } catch (err) {
+            log('Не удалось вернуться в комнату: ' + err);
+        }
+    }
+});
+
+connection.onclose(function (error) {
+    setStatus('Соединение потеряно');
+    log('Соединение закрыто окончательно');
+    sendBtn.disabled = true;
+    joinBtn.disabled = true;
+    leaveBtn.disabled = true;
+    sendRoomBtn.disabled = true;
+});
+
 async function start() {
     try {
         await connection.start();
-        statusEl.textContent = 'подключено';
+        setStatus('подключено');
         connIdEl.textContent = connection.connectionId;
         sendBtn.disabled = false;
         joinBtn.disabled = false;
@@ -80,7 +112,7 @@ async function start() {
         sendRoomBtn.disabled = false;
         log('Мы подключились. Наш ID: ' + connection.connectionId);
     } catch (err) {
-        statusEl.textContent = 'ошибка: ' + err;
+        setStatus('ошибка: ' + err);
         setTimeout(start, 3000);
     }
 }
@@ -97,15 +129,18 @@ async function joinRoom() {
     const name = roomInput.value.trim();
     if (!name) return;
 
-    if (currentRoom && currentRoom !== name) {
+    if (currentRoom === name) {
+        log('Вы уже в комнате ' + name);
+        return;
+    }
+    if (currentRoom) {
         await connection.invoke('LeaveRoom', currentRoom);
     }
-
     await connection.invoke('JoinRoom', name);
 }
 
 function leaveRoom() {
-    const name = roomInput.value;
+    const name = roomInput.value.trim();
     if (!name) return;
     connection.invoke('LeaveRoom', name);
 }
@@ -116,6 +151,23 @@ function sendToRoom() {
     connection.invoke('SendToRoom', currentRoom, text);
     roomMsgInput.value = '';
     roomMsgInput.focus();
+}
+
+async function sendSystemMessage() {
+    const text = systemInput.value;
+    if (!text) return;
+
+    try {
+        const resp = await fetch('/api/system/message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        });
+        if (!resp.ok) log('HTTP ошибка: ' + resp.status);
+    } catch (e) {
+        log('Ошибка: ' + e);
+    }
+    systemInput.value = '';
 }
 
 sendBtn.addEventListener('click', send);
@@ -129,26 +181,6 @@ sendRoomBtn.addEventListener('click', sendToRoom);
 roomMsgInput.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') sendToRoom();
 });
-
-async function sendSystemMessage() {
-    const text = systemInput.value;
-    if (!text) return;
-
-    try {
-        const resp = await fetch('/api/system/message', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: text })
-        });
-        if (!resp.ok) {
-            log('Ошибка HTTP: ' + resp.status);
-        }
-    } catch (e) {
-        log('Ошибка: ' + e);
-    }
-
-    systemInput.value = '';
-}
 
 sendSystemBtn.addEventListener('click', sendSystemMessage);
 

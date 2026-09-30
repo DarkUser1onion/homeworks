@@ -28,5 +28,5 @@
 /home/Whoami/Desktop/homeworks/RealtimePanel/obj/Debug/net10.0/RealtimePanel.genruntimeconfig.cache
 /home/Whoami/Desktop/homeworks/RealtimePanel/obj/Debug/net10.0/ref/RealtimePanel.dll
 /home/Whoami/Desktop/homeworks/RealtimePanel/bin/Debug/net10.0/RealtimePanel.staticwebassets.runtime.json
-/home/Whoami/Desktop/homeworks/RealtimePanel/obj/Debug/net10.0/compressed/8m3ksow5xk-{0}-na69t4iiri-na69t4iiri.gz
 /home/Whoami/Desktop/homeworks/RealtimePanel/obj/Debug/net10.0/compressed/ryc2aq6535-{0}-osgjtkip69-osgjtkip69.gz
+/home/Whoami/Desktop/homeworks/RealtimePanel/obj/Debug/net10.0/compressed/8m3ksow5xk-{0}-refhzalof7-refhzalof7.gz
