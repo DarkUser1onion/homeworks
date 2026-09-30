@@ -34,10 +34,28 @@
     <button id="sendBtn" disabled>Отправить</button>
     
     <hr />
+
+    <h3>Приватное сообщение</h3>
+    <p>
+        <input id="privateTargetInput" type="text" placeholder="ID получателя" size="40" />
+        <input id="privateTextInput" type="text" placeholder="Текст..." />
+        <button id="sendPrivateBtn" disabled>Отправить приватно</button>
+    </p>
+
+    <hr />
+
+    <h3>Внешнее уведомление в комнату</h3>
+    <p>
+        <input id="externalRoomInput" type="text" placeholder="Комната" />
+        <input id="externalRoomTextInput" type="text" placeholder="Текст..." />
+        <button id="sendExternalRoomBtn">Отправить через HTTP</button>
+    </p>
+
+    <hr />
     <h3>Системное сообщение</h3>
     <input id="systemInput" type="text" placeholder="Текст системного сообщения..." />
     <button id="sendSystemBtn">Отправить всем</button>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="/js/app.js"></script>
 

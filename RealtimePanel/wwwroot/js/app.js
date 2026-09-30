@@ -15,6 +15,14 @@ const currentRoomEl = document.getElementById('currentRoom');
 const systemInput   = document.getElementById('systemInput');
 const sendSystemBtn = document.getElementById('sendSystemBtn');
 
+const privateTargetInput    = document.getElementById('privateTargetInput');
+const privateTextInput      = document.getElementById('privateTextInput');
+const sendPrivateBtn        = document.getElementById('sendPrivateBtn');
+
+const externalRoomInput     = document.getElementById('externalRoomInput');
+const externalRoomTextInput = document.getElementById('externalRoomTextInput');
+const sendExternalRoomBtn   = document.getElementById('sendExternalRoomBtn');
+
 let currentRoom = null;
 
 const connection = new signalR.HubConnectionBuilder()
@@ -72,6 +80,18 @@ connection.on('SystemMessage', function (text) {
     log('*** СИСТЕМА: ' + text + ' ***');
 });
 
+connection.on('PrivateMessage', function (senderId, text) {
+    log('[ПРИВАТНО от ' + senderId + '] ' + text);
+});
+
+connection.on('PrivateMessageSent', function (targetId, text) {
+    log('[ПРИВАТНО → ' + targetId + '] ' + text);
+});
+
+connection.on('ExternalRoomMessage', function (roomName, text) {
+    log('[внешнее в комнату ' + roomName + '] ' + text);
+});
+
 connection.onreconnecting(function (error) {
     setStatus('Переподключение...');
     log('Соединение потеряно. Переподключаемся...');
@@ -110,6 +130,7 @@ async function start() {
         joinBtn.disabled = false;
         leaveBtn.disabled = false;
         sendRoomBtn.disabled = false;
+        sendPrivateBtn.disabled = false;
         log('Мы подключились. Наш ID: ' + connection.connectionId);
     } catch (err) {
         setStatus('ошибка: ' + err);
@@ -183,5 +204,45 @@ roomMsgInput.addEventListener('keydown', function (e) {
 });
 
 sendSystemBtn.addEventListener('click', sendSystemMessage);
+
+function sendPrivate() {
+    const target = privateTargetInput.value.trim();
+    const text = privateTextInput.value;
+    if (!target || !text) return;
+
+    connection.invoke('SendPrivate', target, text);
+    privateTextInput.value = '';
+    privateTextInput.focus();
+}
+
+async function sendExternalRoom() {
+    const room = externalRoomInput.value.trim();
+    const text = externalRoomTextInput.value;
+    if (!room || !text) return;
+
+    try {
+        const resp = await fetch('/api/system/room', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roomName: room, text: text })
+        });
+        if (!resp.ok) log('HTTP ошибка: ' + resp.status);
+        else log('Внешнее уведомление отправлено в комнату ' + room);
+    } catch (e) {
+        log('Ошибка: ' + e);
+    }
+
+    externalRoomTextInput.value = '';
+}
+
+sendPrivateBtn.addEventListener('click', sendPrivate);
+privateTextInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') sendPrivate();
+});
+
+sendExternalRoomBtn.addEventListener('click', sendExternalRoom);
+externalRoomTextInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') sendExternalRoom();
+});
 
 start();

@@ -52,4 +52,16 @@ public class ConnectionTracker
         if (string.IsNullOrWhiteSpace(text)) return;
         await _hub.Clients.All.SendAsync("SystemMessage", text);
     }
+
+    public async Task SendToRoomAsync(string roomName, string text)
+    {
+        if (string.IsNullOrWhiteSpace(roomName) || string.IsNullOrWhiteSpace(text)) return;
+        await _hub.Clients.Group(roomName).SendAsync("ExternalRoomMessage", roomName, text);
+    }
+
+    public async Task SendPrivateAsync(string connectionId, string text)
+    {
+        if (string.IsNullOrWhiteSpace(connectionId) || string.IsNullOrWhiteSpace(text)) return;
+        await _hub.Clients.Client(connectionId).SendAsync("ExternalPrivateMessage", text);
+    }
 }

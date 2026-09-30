@@ -50,4 +50,12 @@ public class ActivityHub : Hub
         if (string.IsNullOrWhiteSpace(roomName) || string.IsNullOrWhiteSpace(text)) return;
         await Clients.Group(roomName).SendAsync("ReceiveRoomMessage", Context.ConnectionId, roomName, text);
     }
+
+    public async Task SendPrivate(string targetConnectionId, string text)
+    {
+        if (string.IsNullOrWhiteSpace(targetConnectionId) || string.IsNullOrWhiteSpace(text)) return;
+
+        await Clients.Client(targetConnectionId).SendAsync("PrivateMessage", Context.ConnectionId, text);
+        await Clients.Caller.SendAsync("PrivateMessageSent", targetConnectionId, text);
+    }
 }

@@ -34,6 +34,26 @@ app.MapPost("/api/system/message", async (ConnectionTracker tracker, SystemMessa
     return Results.Ok(new { sent = true });
 });
 
+app.MapPost("/api/system/room", async (ConnectionTracker tracker, RoomMessageDto dto) =>
+{
+    if (string.IsNullOrWhiteSpace(dto.RoomName) || string.IsNullOrWhiteSpace(dto.Text))
+        return Results.BadRequest(new { error = "RoomName and Text are required" });
+
+    await tracker.SendToRoomAsync(dto.RoomName, dto.Text);
+    return Results.Ok(new { sent = true });
+});
+
+app.MapPost("/api/system/private", async (ConnectionTracker tracker, PrivateMessageDto dto) =>
+{
+    if (string.IsNullOrWhiteSpace(dto.ConnectionId) || string.IsNullOrWhiteSpace(dto.Text))
+        return Results.BadRequest(new { error = "ConnectionId and Text are required" });
+
+    await tracker.SendPrivateAsync(dto.ConnectionId, dto.Text);
+    return Results.Ok(new { sent = true });
+});
+
 app.Run();
 
 public record SystemMessageDto(string Text);
+public record RoomMessageDto(string RoomName, string Text);
+public record PrivateMessageDto(string ConnectionId, string Text);
