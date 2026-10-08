@@ -4,6 +4,15 @@
     ViewData["Title"] = "Админ-панель";
 }
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <h2>Админ-панель</h2>
 
 <h3>Пользователи</h3>
@@ -14,6 +23,7 @@
             <th>Email</th>
             <th>Имя</th>
             <th>Роли</th>
+            <th>Изменить роль</th>
         </tr>
     </thead>
     <tbody>
@@ -23,6 +33,25 @@
                 <td>@row.Email</td>
                 <td>@row.FullName</td>
                 <td>@string.Join(", ", row.Roles)</td>
+                <td>
+                    <form method="post" asp-page-handler="ChangeRole" class="d-flex gap-2">
+                        <input type="hidden" name="userId" value="@row.Id" />
+                        <select name="newRole" class="form-select form-select-sm">
+                            @foreach (var role in new[] { "User", "Author", "Admin" })
+                            {
+                                if (row.Roles.Contains(role))
+                                {
+                                    <option value="@role" selected>@role</option>
+                                }
+                                else
+                                {
+                                    <option value="@role">@role</option>
+                                }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm">Применить</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
