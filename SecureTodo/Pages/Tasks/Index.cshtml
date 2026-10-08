@@ -1,0 +1,47 @@
+@page
+@model SecureTodo.Pages.Tasks.IndexModel
+@{
+    ViewData["Title"] = "Мои задачи";
+}
+
+<h2>Задачи</h2>
+
+<p>
+    <a asp-page="/Tasks/Create" class="btn btn-primary">Создать задачу</a>
+</p>
+
+@if (Model.Tasks.Count == 0)
+{
+    <p>Задач пока нет.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Заголовок</th>
+                <th>Описание</th>
+                <th>Автор</th>
+                <th>Статус</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model.Tasks)
+            {
+                <tr>
+                    <td>@task.Title</td>
+                    <td>@task.Description</td>
+                    <td>@task.User?.Email</td>
+                    <td>@(task.IsCompleted ? "Выполнена" : "Активна")</td>
+                    <td>
+                        @if (task.UserId == Model.CurrentUserId || User.IsInRole("Admin"))
+                        {
+                            <a asp-page="/Tasks/Edit" asp-route-id="@task.Id">Редактировать</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

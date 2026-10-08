@@ -1,0 +1,23 @@
+@page
+@model SecureTodo.Pages.Tasks.CreateModel
+@{
+    ViewData["Title"] = "Новая задача";
+}
+
+<h2>Новая задача</h2>
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <p>
+        <label>Заголовок</label><br />
+        <input asp-for="Input.Title" />
+    </p>
+    <p>
+        <label>Описание</label><br />
+        <textarea asp-for="Input.Description" rows="4" cols="50"></textarea>
+    </p>
+
+    <button type="submit">Создать</button>
+    <a asp-page="/Tasks/Index">Отмена</a>
+</form>

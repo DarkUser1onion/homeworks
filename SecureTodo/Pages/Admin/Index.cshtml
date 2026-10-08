@@ -1,0 +1,29 @@
+@page
+@model SecureTodo.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Админ-панель";
+}
+
+<h2>Админ-панель</h2>
+
+<h3>Пользователи</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Имя</th>
+            <th>Роли</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var row in Model.Users)
+        {
+            <tr>
+                <td>@row.Email</td>
+                <td>@row.FullName</td>
+                <td>@string.Join(", ", row.Roles)</td>
+            </tr>
+        }
+    </tbody>
+</table>
