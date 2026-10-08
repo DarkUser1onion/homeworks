@@ -1,0 +1,25 @@
+@page
+@model SecureTodo.Pages.Account.LoginWith2faModel
+@{
+    ViewData["Title"] = "Двухфакторная аутентификация";
+}
+
+<h2>Введите код из приложения</h2>
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="RememberMe" />
+
+    <p>
+        <label>6-значный код</label><br />
+        <input asp-for="Input.Code" inputmode="numeric" maxlength="6" />
+    </p>
+    <p>
+        <label>
+            <input asp-for="Input.RememberMachine" type="checkbox" />
+            Запомнить это устройство
+        </label>
+    </p>
+
+    <button type="submit">Подтвердить</button>
+</form>

@@ -45,6 +45,9 @@
                                 <span class="nav-link">Привет, <b>@User.Identity.Name</b>!</span>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" asp-page="/Account/Profile">Профиль</a>
+                            </li>
+                            <li class="nav-item">
                                 <form method="post" asp-page="/Account/Logout" class="d-inline">
                                     <button type="submit" class="btn btn-outline-light btn-sm mt-1">Выйти</button>
                                 </form>

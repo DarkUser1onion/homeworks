@@ -1,0 +1,25 @@
+@page
+@model SecureTodo.Pages.Account.ProfileModel
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<h2>Профиль</h2>
+
+<p><b>Email:</b> @Model.Email</p>
+<p><b>Имя:</b> @Model.FullName</p>
+
+<h3>Двухфакторная аутентификация</h3>
+
+@if (Model.Is2faEnabled)
+{
+    <p style="color:green;">2FA включена</p>
+    <form method="post" asp-page-handler="Disable2fa">
+        <button type="submit" class="btn btn-danger">Отключить 2FA</button>
+    </form>
+}
+else
+{
+    <p style="color:gray;">2FA выключена</p>
+    <a asp-page="/Account/Enable2fa" class="btn btn-primary">Включить 2FA</a>
+}

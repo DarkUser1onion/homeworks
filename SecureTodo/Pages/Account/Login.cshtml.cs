@@ -37,6 +37,11 @@ public class LoginModel : PageModel
 
         if (result.Succeeded) return RedirectToPage("/Index");
 
+        if (result.RequiresTwoFactor)
+        {
+            return RedirectToPage("/Account/LoginWith2fa", new { rememberMe = Input.RememberMe });
+        }
+
         if (result.IsLockedOut)
         {
             ModelState.AddModelError(string.Empty, "Аккаунт заблокирован на 15 минут из-за неудачных попыток.");

@@ -1,0 +1,36 @@
+@page
+@model SecureTodo.Pages.Account.Enable2faModel
+@{
+    ViewData["Title"] = "Включение 2FA";
+}
+
+<h2>Включение 2FA</h2>
+
+@if (Model.Is2faEnabled)
+{
+    <p style="color:green;">2FA уже включена.</p>
+    <a asp-page="/Account/Profile">← В профиль</a>
+}
+else
+{
+    <p>1. Открой приложение Google Authenticator / Microsoft Authenticator.</p>
+    <p>2. Отсканируй QR-код:</p>
+
+    <div style="margin:15px 0;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=@Uri.EscapeDataString(Model.QrCodeUrl)"
+             alt="QR-код для 2FA" />
+    </div>
+
+    <p>Или введи ключ вручную:</p>
+    <p><code>@Model.SharedKey</code></p>
+
+    <hr />
+
+    <p>3. Введи 6-значный код из приложения:</p>
+
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input name="Code" type="text" inputmode="numeric" maxlength="6" placeholder="123456" />
+        <button type="submit" class="btn btn-primary">Проверить и включить</button>
+    </form>
+}
