@@ -1,0 +1,30 @@
+@page
+@model SecureTodo.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<h2>Вход</h2>
+
+<form method="post">
+    <div asp-validation-summary="All" style="color: red;"></div>
+
+    <p>
+        <label>Email</label><br />
+        <input asp-for="Input.Email" type="email" />
+    </p>
+    <p>
+        <label>Пароль</label><br />
+        <input asp-for="Input.Password" type="password" />
+    </p>
+    <p>
+        <label>
+            <input asp-for="Input.RememberMe" type="checkbox" />
+            Запомнить меня
+        </label>
+    </p>
+
+    <button type="submit">Войти</button>
+</form>
+
+<p>Нет аккаунта? <a asp-page="/Account/Register">Зарегистрироваться</a></p>

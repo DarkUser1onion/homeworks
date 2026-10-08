@@ -1,0 +1,18 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<h1>Добро пожаловать в SecureTodo</h1>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <p>Вы вошли как <b>@User.Identity.Name</b>.</p>
+    <p><a asp-page="/Tasks/Index">Мои задачи</a></p>
+}
+else
+{
+    <p>Чтобы начать работу, <a asp-page="/Account/Login">войдите</a> или
+       <a asp-page="/Account/Register">зарегистрируйтесь</a>.</p>
+}
