@@ -12,11 +12,13 @@ public class IndexModel : PageModel
 {
     private readonly AppDbContext _db;
     private readonly UserManager<AppUser> _userManager;
+    private readonly IAuthorizationService _auth;
 
-    public IndexModel(AppDbContext db, UserManager<AppUser> userManager)
+    public IndexModel(AppDbContext db, UserManager<AppUser> userManager, IAuthorizationService auth)
     {
         _db = db;
         _userManager = userManager;
+        _auth = auth;
     }
 
     public List<TaskItem> Tasks { get; set; } = new();
@@ -26,12 +28,14 @@ public class IndexModel : PageModel
     {
         CurrentUserId = _userManager.GetUserId(User) ?? "";
 
-        var query = _db.Tasks.Include(t => t.User).AsQueryable();
-        if (!User.IsInRole("Admin"))
-        {
-            query = query.Where(t => t.UserId == CurrentUserId);
-        }
+        Tasks = await _db.Tasks
+            .Include(t => t.User)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
+    }
 
-        Tasks = await query.OrderByDescending(t => t.CreatedAt).ToListAsync();
+    public async Task<AuthorizationResult> CanEditAsync(TaskItem task)
+    {
+        return await _auth.AuthorizeAsync(User, task, "CanEditTask");
     }
 }

@@ -35,7 +35,10 @@ else
                     <td>@task.User?.Email</td>
                     <td>@(task.IsCompleted ? "Выполнена" : "Активна")</td>
                     <td>
-                        @if (task.UserId == Model.CurrentUserId || User.IsInRole("Admin"))
+                        @{
+                            var canEdit = (await Model.CanEditAsync(task)).Succeeded;
+                        }
+                        @if (canEdit)
                         {
                             <a asp-page="/Tasks/Edit" asp-route-id="@task.Id">Редактировать</a>
                         }

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SecureTodo.Data;
 using SecureTodo.Models;
 
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -32,6 +34,14 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.SlidingExpiration = true;
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, SecureTodo.Authorization.CanEditTaskHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CanEditTask", policy =>
+        policy.Requirements.Add(new SecureTodo.Authorization.CanEditTaskRequirement()));
 });
 
 builder.Services.AddRazorPages();
