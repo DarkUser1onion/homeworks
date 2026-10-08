@@ -59,6 +59,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddSingleton<JwtService>();
 
+builder.Services.AddScoped<RefreshTokenService>();
+
 builder.Services.AddSingleton<IAuthorizationHandler, CanEditTaskHandler>();
 builder.Services.AddAuthorization(options =>
 {
