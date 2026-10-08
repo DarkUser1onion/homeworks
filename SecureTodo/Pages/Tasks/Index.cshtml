@@ -1,8 +1,14 @@
 @page
+@section Meta {
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(HttpContext).RequestToken" />
+}
 @model SecureTodo.Pages.Tasks.IndexModel
 @{
     ViewData["Title"] = "Мои задачи";
 }
+
+@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery Antiforgery
 
 <h2>Задачи</h2>
 
@@ -41,7 +47,11 @@ else
                         @if (canEdit)
                         {
                             <a asp-page="/Tasks/Edit" asp-route-id="@task.Id">Редактировать</a>
+                            <button type="button" class="btn-complete" data-task-id="@task.Id">
+                                @(task.IsCompleted ? "Снять отметку" : "Отметить выполненной")
+                            </button>
                         }
+                        
                     </td>
                 </tr>
             }

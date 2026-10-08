@@ -140,7 +140,6 @@
 /home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/scopedcss/projectbundle/SecureTodo.bundle.scp.css
 /home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/compressed/z5d89dd5nk-{0}-lugek5hnai-lugek5hnai.gz
 /home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/compressed/thls4wsyyg-{0}-61n19gt1b8-61n19gt1b8.gz
-/home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/compressed/dvzwar3jp4-{0}-fr7q2aak1r-fr7q2aak1r.gz
 /home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/compressed/461zkrr7qc-{0}-bqjiyaj88i-bqjiyaj88i.gz
 /home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/compressed/a8x9lzfees-{0}-c2jlpeoesf-c2jlpeoesf.gz
 /home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/compressed/dk50qhlgsn-{0}-erw9l3u2r3-erw9l3u2r3.gz
@@ -227,3 +226,4 @@
 /home/Whoami/Desktop/homeworks/SecureTodo/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /home/Whoami/Desktop/homeworks/SecureTodo/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerUI.dll
 /home/Whoami/Desktop/homeworks/SecureTodo/bin/Debug/net10.0/System.IdentityModel.Tokens.Jwt.dll
+/home/Whoami/Desktop/homeworks/SecureTodo/obj/Debug/net10.0/compressed/dvzwar3jp4-{0}-brk4wzejxb-brk4wzejxb.gz

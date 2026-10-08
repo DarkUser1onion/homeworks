@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SecureTodo.Data;
 using SecureTodo.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SecureTodo.Pages.Tasks;
 
@@ -32,6 +33,22 @@ public class IndexModel : PageModel
             .Include(t => t.User)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
+    }
+
+    public async Task<IActionResult> OnPostToggleCompleteAsync(int id)
+    {
+        var userId = _userManager.GetUserId(User) ?? "";
+        var task = await _db.Tasks.FindAsync(id);
+
+        if (task == null) return NotFound();
+
+        if (!User.IsInRole("Admin") && task.UserId != userId)
+            return Forbid();
+
+        task.IsCompleted = !task.IsCompleted;
+        await _db.SaveChangesAsync();
+
+        return new JsonResult(new { isCompleted = task.IsCompleted });
     }
 
     public async Task<AuthorizationResult> CanEditAsync(TaskItem task)
